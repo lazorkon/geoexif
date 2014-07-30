@@ -8,5 +8,5 @@ module.exports = {
     uri: 'mongodb://localhost/geoexif-dev'
   },
 
-  seedDB: true
+  seedDB: false
 };
