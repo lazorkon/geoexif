@@ -1,17 +1,64 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container" ng-hide="info">
+<div class="container" ng-hide="data">
   <div class="row">
     <div class="col-lg-12">
       <div>todo: upload file here</div>
+
+
+      <div id="upload-zone" ng-file-drop-available="dropSupported=true">
+        <div class="drop-zone" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="file-over">
+          <div ng-file-select="onFileSelect($files)" accept="image/*">
+            <div class="text-center">
+              <div>
+                <strong ng-show="dropSupported">GRAG OR</strong> <strong>CLICK</strong>
+              </div>
+              <div>TO UPLOAD PICTURE</div>
+            </div>
+          </div>
+        </div>
+        <input type="text" class="url-zone" placeholder="or paste url here">
+
+        <!-- <input type="text" ng-model="myModelObj">
+        <input type="file" ng-file-select="onFileSelect($files)" accept="image/*"> -->
+        <!-- <div class="button" ng-file-select="onFileSelect($files)" accept="image/*"></div> -->
+        
+        
+        <!-- <button ng-click="upload.abort()">Cancel Upload</button> -->
+
+      </div>
+
+      <!-- todo: show progress -->
+      <!-- todo: hide upload zone on upload start and show progress and cancel -->
     </div>
   </div>
 </div>
 
-<div class="container" ng-if="info">
+<div class="container" ng-if="data">
   <div class="row">
     <div class="col-lg-12">
-      <div>todo: exif info here</div>
+      <div>
+
+File
+  data.file.filename
+  data.resolution.x x data.resolution.y data.file.extension (Math.floor(data.resolution.x*data.resolution.y/1000) megapixels)
+
+Camera
+  data.camera.make data.camera.model
+  data.camera.exposureMode, Program data.camera.exposureProgram, data.camera.exposureTime sec, f/data.camera.fNumber
+
+Date
+  data.date.original
+  todo: time ago
+
+Location
+  todo: geocoding 
+  data.location.dms.lat, data.location.dms.lng
+  data.location.ddd.lat, data.location.ddd.lng
+
+todo: google map
+
+      </div>
     </div>
   </div>
 </div>

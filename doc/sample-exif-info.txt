@@ -1,0 +1,75 @@
+var info = {
+    image: {
+        Make: 'NIKON CORPORATION',
+        Model: 'NIKON D2H',
+        Orientation: 1,
+        XResolution: 256,
+        YResolution: 256,
+        ResolutionUnit: 2,
+        Software: 'Opanda PowerExif',
+        ModifyDate: '2005:07:02 10:38:28',
+        ExifOffset: 216,
+        GPSInfo: 820
+    },
+    thumbnail: {
+        Compression: 6,
+        XResolution: 72,
+        YResolution: 72,
+        ResolutionUnit: 2,
+        ThumbnailOffset: 1088,
+        ThumbnailLength: 4034
+    },
+    exif: {
+        ExposureTime: 0.008,
+        FNumber: 4.5,
+        ExposureProgram: 3,
+        ExifVersion: < Buffer 30 32 32 30 > ,
+        DateTimeOriginal: '2003:11:23 18:07:37',
+        CreateDate: '2003:11:23 18:07:37',
+        CompressedBitsPerPixel: 4,
+        ExposureCompensation: 0,
+        MaxApertureValue: 3,
+        MeteringMode: 3,
+        LightSource: 0,
+        Flash: 0,
+        FocalLength: 23.33,
+        UserComment: < Buffer 00 00 00 00 00 00 00 00 74 61 6b 65 6e 20 61 74 20 62 61 73 69 6c 69 63 61 20 6f 66 20 63 68 69 6e 65 73 65 > ,
+        SubSecTime: '63',
+        SubSecTimeOriginal: '63',
+        SubSecTimeDigitized: '63',
+        FlashpixVersion: < Buffer 30 31 30 30 > ,
+        ColorSpace: 65535,
+        ExifImageWidth: 500,
+        ExifImageHeight: 375,
+        RelatedSoundFile: '            ',
+        SensingMethod: 2,
+        FileSource: < Buffer 03 > ,
+        SceneType: < Buffer 01 > ,
+        CFAPattern: < Buffer 00 02 00 02 01 02 00 01 > ,
+        CustomRendered: 0,
+
+        // 0 = Auto exposure, 1 = Manual exposure, 2 = Auto bracket
+        ExposureMode: 0,
+
+        WhiteBalance: 0,
+        DigitalZoomRatio: 1,
+        FocalLengthIn35mmFormat: 35,
+        SceneCaptureType: 0,
+        GainControl: 1,
+        Contrast: 1,
+        Saturation: 0,
+        Sharpness: 0,
+        SubjectDistanceRange: 0
+    },
+    gps: {
+        GPSVersionID: [2, 2, 0, 0],
+        GPSLatitudeRef: 'N',
+        GPSLatitude: [39, 54, 56],
+        GPSLongitudeRef: 'E',
+        GPSLongitude: [116, 23, 27],
+        GPSTimeStamp: [18, 7, 37],
+        GPSDateStamp: '2003:11:23'
+    },
+    interoperability: {},
+    makernote: {}
+};
