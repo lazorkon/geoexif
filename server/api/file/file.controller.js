@@ -1,5 +1,6 @@
 'use strict';
 
+var util = require('util');
 var _ = require('lodash');
 var ExifImage = require('exif').ExifImage;
 // var File = require('./file.model');
@@ -23,18 +24,18 @@ var ExifImage = require('exif').ExifImage;
  */
 exports.upload = function(req, res, next) {
   if (!req.files || !req.files.file) {
-    return handleError(res, new Error('File is not uploaded'));
+    next(new Error('File is not uploaded'));
   }
 
   var file = req.files.file;
   try {
     new ExifImage({ image: file.path }, function (err, info) {
-      if (err) return handleError(res, err);
+      if (err) return next(err);
       console.log('file.upload exif: ', util.inspect(info, false, null));
       return res.json(200, convertExif(file, info));
     });
   } catch (error) {
-    return handleError(res, error);
+    return next(error);
   }
 };
 
@@ -68,29 +69,35 @@ function convertExif(file, info) {
     size: file.size
   };
 
-  if (!info) {
+  if (!info || !info.exif || !info.exif.ExifVersion) {
     return data;
   }
 
-  data.date = {
-    original: info.exif.DateTimeOriginal,
-    created: info.exif.CreateDate
-  };
+  if (info.exif) {
+    data.date = {
+      original: info.exif.DateTimeOriginal,
+      created: info.exif.CreateDate
+    };
+  }
 
-  data.resolution = {
-    x: info.image.XResolution,
-    y: info.image.YResolution 
-  };
+  if (info.image) {
+    data.resolution = {
+      x: info.image.XResolution,
+      y: info.image.YResolution 
+    };
+  }
 
-  data.camera = {
-    focalLength: info.exif.FocalLength,
-    exposureMode: exifInfo.ExposureMode[info.exif.ExposureMode],
-    exposureProgram: exifInfo.ExposureProgram[info.exif.ExposureProgram],
-    exposureTime: info.exif.ExposureTime,
-    fNumber: info.exif.FNumber,
-    make: info.image.Make,
-    model: info.image.Model
-  };
+  if (info.exif) {
+    data.camera = {
+      focalLength: info.exif.FocalLength,
+      exposureMode: exifInfo.ExposureMode[info.exif.ExposureMode],
+      exposureProgram: exifInfo.ExposureProgram[info.exif.ExposureProgram],
+      exposureTime: info.exif.ExposureTime,
+      fNumber: info.exif.FNumber,
+      make: info.image.Make,
+      model: info.image.Model
+    };
+  }
   
   data.location = getExifLocation(info);
 
@@ -98,14 +105,14 @@ function convertExif(file, info) {
 }
 
 
-function getExifLatLng(info) {
-  if (!info.gps) {
+function getExifLocation(info) {
+  if (!info.gps || !info.gps.GPSLatitude || !info.gps.GPSLongitude) {
     return null;
   }
   var lat = info.gps.GPSLatitude;
   var lng = info.gps.GPSLongitude;
-  decimalLat = lat[0] + (lat[1] / 60.0) + (lat[2] / 3600.0);
-  decimalLng = lng[0] + (lng[1] / 60.0) + (lng[2] / 3600.0);
+  var decimalLat = lat[0] + (lat[1] / 60.0) + (lat[2] / 3600.0);
+  var decimalLng = lng[0] + (lng[1] / 60.0) + (lng[2] / 3600.0);
 
   if (info.gps.GPSLatitudeRef != 'N') {
     decimalLat = 0 - decimalLat;
@@ -116,8 +123,8 @@ function getExifLatLng(info) {
   return { 
     // Degrees, minutes and seconds
     dms: {
-      lat: lat.slice().push(info.gps.GPSLatitudeRef),
-      lng: lng.slice().push(info.gps.GPSLongitudeRef)
+      lat: lat.slice().concat(info.gps.GPSLatitudeRef),
+      lng: lng.slice().concat(info.gps.GPSLongitudeRef)
     },
 
     // Decimal degrees
@@ -126,10 +133,4 @@ function getExifLatLng(info) {
       lng: decimalLng
     }
   };
-}
-
-
-// todo: rewrite error handler (dev: send error, productuion: send "something went wrong")
-function handleError(res, err) {
-  return res.send(500, err);
 }

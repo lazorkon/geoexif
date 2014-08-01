@@ -2,13 +2,11 @@
 
 <div class="container" ng-hide="data">
   <div class="row">
-    <div class="col-lg-12">
-      <div>todo: upload file here</div>
-
+    <div class="col-sm-12">
 
       <div id="upload-zone" ng-file-drop-available="dropSupported=true">
-        <div class="drop-zone" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="file-over">
-          <div ng-file-select="onFileSelect($files)" accept="image/*">
+        <div class="drop-zone" ng-file-drop="onFileSelect($files)" ng-mode="selectedFiles" ng-file-drag-over-class="file-over">
+          <div ng-file-select="onFileSelect($files)" accept="image/jpeg" ng-mode="selectedFiles">
             <div class="text-center">
               <div>
                 <strong ng-show="dropSupported">GRAG OR</strong> <strong>CLICK</strong>
@@ -27,6 +25,9 @@
         <!-- <button ng-click="upload.abort()">Cancel Upload</button> -->
 
       </div>
+      <div ng-if="error" class="error">
+        Error
+      </div>
 
       <!-- todo: show progress -->
       <!-- todo: hide upload zone on upload start and show progress and cancel -->
@@ -34,31 +35,54 @@
   </div>
 </div>
 
-<div class="container" ng-if="data">
+<div class="container" ng-if="data" bindonce>
   <div class="row">
-    <div class="col-lg-12">
-      <div>
+    <div class="col-sm-12">
+      todo: image here
+    </div>
+  </div>
 
-File
-  data.file.filename
-  data.resolution.x x data.resolution.y data.file.extension (Math.floor(data.resolution.x*data.resolution.y/1000) megapixels)
+  <div class="row">
+    <div class="col-sm-4"><h3>File</h3></div>
+    <div class="col-sm-8">
+      <p bo-text="data.file.filename"></p>
+      <p><span bo-text="data.resolution.x"></span>&nbsp;x&nbsp;<span bo-text="data.resolution.y"></span> <span bo-text="data.file.extension"></span> (<span bo-text="Math.floor(data.resolution.x*data.resolution.y/1000)"></span>&nbsp;megapixels)</p>          
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-sm-4"><h3>Camera</h3></div>
+    <div class="col-sm-8">
+      <p><span bo-text="data.camera.make"></span> <span bo-text="data.camera.model"></span></p>
+      <p><span bo-text="data.camera.exposureMode"></span>, Program&nbsp;<span bo-text="data.camera.exposureProgram"></span>, <span bo-text="data.camera.exposureTime"></span>&nbsp;sec, f/<span bo-text="data.camera.fNumber"></span></p>
+    </div>
+  </div>
 
-Camera
-  data.camera.make data.camera.model
-  data.camera.exposureMode, Program data.camera.exposureProgram, data.camera.exposureTime sec, f/data.camera.fNumber
+  <div class="row">
+    <div class="col-sm-4"><h3>Date</h3></div>
+    <div class="col-sm-8">
+      <p><span bo-text="data.date.original"></span></p>
+      <p>todo: time ago</p>
+    </div>
+  </div>
 
-Date
-  data.date.original
-  todo: time ago
+  <div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-8"></div>
+  </div>
 
-Location
-  todo: geocoding 
-  data.location.dms.lat, data.location.dms.lng
-  data.location.ddd.lat, data.location.ddd.lng
+  <div class="row">
+    <div class="col-sm-4"><h3>Location</h3></div>
+    <div class="col-sm-8">
+      <p>todo: geocoding </p>
+      <p><span bo-text="data.location.dms.lat"></span>, <span bo-text="data.location.dms.lng"></span></p>
+      <p><span bo-text="data.location.ddd.lat"></span>, <span bo-text="data.location.ddd.lng"></span></p>
+    </div>
+  </div>
 
-todo: google map
-
-      </div>
+  <div class="row">
+    <div class="col-sm-12">
+      todo: map here
     </div>
   </div>
 </div>

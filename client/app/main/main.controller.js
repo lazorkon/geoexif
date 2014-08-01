@@ -1,34 +1,85 @@
 'use strict';
 
 angular.module('geoExifApp')
-  .controller('MainCtrl', function ($scope, $upload) {
+  .controller('MainCtrl', function ($scope, $window, $timeout, $upload) {
+    var debug = true;
+
     $scope.data = null;
   
+    $scope.fileReaderSupported = $window.FileReader != null && (window.FileAPI == null || FileAPI.html5 != false);
+
     $scope.onFileSelect = function($files) {
-      var file = $files[0];
-      $scope.upload = $upload.upload({
+      var i, c;
+      $scope.selectedFiles = [];
+      $scope.progress = [];
+      if ($scope.upload && $scope.upload.length > 0) {
+        for (i = 0, c = $scope.upload.length; i < c; ++i) {
+          if ($scope.upload[i] != null) {
+            $scope.upload[i].abort();
+          }
+        }
+      }
+      
+      $scope.upload = [];
+      $scope.uploadResult = [];
+      $scope.selectedFiles = $files;
+      $scope.dataUrls = [];
+      for (i = 0, c = $files.length; i < c; ++i) {
+        var $file = $files[i];
+        if ($scope.fileReaderSupported && $file.type.indexOf('image') > -1) {
+          var fileReader = new FileReader();
+          fileReader.readAsDataURL($files[i]);
+          var loadFile = function(fileReader, index) {
+            fileReader.onload = function(e) {
+              $timeout(function() {
+                $scope.dataUrls[index] = e.target.result;
+              });
+            }
+          }(fileReader, i);
+        }
+
+        $scope.progress[i] = -1;
+        $scope.start(i);
+      }
+    };
+
+    $scope.start = function(index) {
+      $scope.progress[index] = 0;
+      $scope.errorMsg = null;
+      $scope.upload[index] = $upload.upload({
         url: '/api/file/upload',
         method: 'POST',
-        headers: {'header-key': 'header-value'},
-        //withCredentials: true,
-        file: file,
-        //fileName: 'doc.jpg' or ['1.jpg', '2.jpg', ...] // to modify the name of the file(s)
-        // customize file formData name ('Content-Desposition'), server side file variable name. 
-        //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file' 
-        // customize how data is added to formData. See #40#issuecomment-28612000 for sample code
-        //formDataAppender: function(formData, key, val){}
-      }).then(function (response) {
-        console.info('--- upload done ', response);
-        $scope.data = response.data;
-      }, function (response) {
-        console.info('--- upload fail ', response);
-      }, function (response) {
-        console.info('--- upload progress ', response);
-        // console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-      }); 
+        file: $scope.selectedFiles[index],
+        fileFormDataName: 'file'
+      });
 
-      console.log('--- upload', $scope.upload);
-
+      $scope.upload[index].then(function(response) {
+        debug && console.log('MainCtrl.upload.done', response.data);
+        $timeout(function() {
+          $scope.data = response.data;
+        });
+      }, function(response) {
+        debug && console.log('MainCtrl.upload.fail', response.data);
+        $scope.error = response.data;
+      }, function(e) {
+        $scope.progress[index] = Math.min(100, parseInt(100.0 * e.loaded / e.total));
+      });
+    };
+  
+    $scope.dragOverClass = function($event) {
+      var items = $event.dataTransfer.items;
+      var hasFile = false;
+      if (items != null) {
+        for (var i = 0 ; i < items.length; i++) {
+          if (items[i].kind == 'file') {
+            hasFile = true;
+            break;
+          }
+        }
+      } else {
+        hasFile = true;
+      }
+      return hasFile ? "dragover" : "dragover-err";
     };
 
   });

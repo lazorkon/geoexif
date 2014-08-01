@@ -5,6 +5,7 @@ angular.module('geoExifApp', [
   'ngResource',
   'ngSanitize',
   'ui.router',
+  'pasvaz.bindonce',
   'angularFileUpload'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
