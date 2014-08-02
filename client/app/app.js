@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('geoExifApp', [
+angular.module('app', [
   'ngCookies',
   'ngResource',
   'ngSanitize',

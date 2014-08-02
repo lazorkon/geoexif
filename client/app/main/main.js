@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('geoExifApp')
+angular.module('app')
   .config(function ($stateProvider) {
     $stateProvider
       .state('main', {

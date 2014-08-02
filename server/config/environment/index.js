@@ -12,13 +12,22 @@ function requiredProcessEnv(name) {
 
 // All configurations will extend these options
 // ============================================
+var root = path.normalize(__dirname + '/../../..');
 var all = {
   env: process.env.NODE_ENV,
 
   // Root path of server
-  root: path.normalize(__dirname + '/../../..'),
+  root: root,
 
-  tmp: path.normalize(__dirname + '/../../../tmp'),
+  baseUrl: '/assets/usr',
+
+  path: {
+    root: root,
+    tmp: root + '/tmp',
+    usr: root + '/client/usr'
+  },
+
+  maxFileSize: 5 * 1024 * 1024,
 
   // Server port
   port: process.env.PORT || 9000,

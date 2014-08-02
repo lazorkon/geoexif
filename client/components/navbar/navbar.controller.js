@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('geoExifApp')
+angular.module('app')
   .controller('NavbarCtrl', function ($scope, $location) {
     
   });

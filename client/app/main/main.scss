@@ -45,3 +45,16 @@
     width: 100%;
     height: 20%;
 }
+
+#upload-zone .url-zone input {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.drop-zone.image-over {
+  border: 1px solid green;
+}
+.drop-zone.err-over {
+  border: 1px solid red;
+}

@@ -30,9 +30,9 @@ module.exports = function(app) {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.use(multer({
-    dest: config.tmp,
+    dest: config.path.tmp,
     limits: {
-      fileSize: 5 * 1024 * 1024
+      fileSize: config.maxFileSize
     },
     rename: function (fieldname, filename) {
       return (new Date).toISOString() + '_' + Math.random().toString(36).substring(5);

@@ -4,8 +4,8 @@
   <div class="row">
     <div class="col-sm-12">
 
-      <div id="upload-zone" ng-file-drop-available="dropSupported=true">
-        <div class="drop-zone" ng-file-drop="onFileSelect($files)" ng-mode="selectedFiles" ng-file-drag-over-class="file-over">
+      <div id="upload-zone" ng-file-drop-available="dropSupported=true" ng-form="form">
+        <div class="drop-zone" ng-file-drop="onFileSelect($files)" ng-mode="selectedFiles" ng-file-drag-over-class="getDragOverClass($event)">
           <div ng-file-select="onFileSelect($files)" accept="image/jpeg" ng-mode="selectedFiles">
             <div class="text-center">
               <div>
@@ -15,21 +15,25 @@
             </div>
           </div>
         </div>
-        <input type="text" class="url-zone" placeholder="or paste url here">
-
-        <!-- <input type="text" ng-model="myModelObj">
-        <input type="file" ng-file-select="onFileSelect($files)" accept="image/*"> -->
-        <!-- <div class="button" ng-file-select="onFileSelect($files)" accept="image/*"></div> -->
-        
-        
-        <!-- <button ng-click="upload.abort()">Cancel Upload</button> -->
-
-      </div>
-      <div ng-if="error" class="error">
-        Error
+        <div class="form-group url-zone" ng-class="{'has-error': form.selectedUrl.$invalid}">
+          <input type="url" name="selectedUrl" class="form-control" placeholder="or paste url here" ng-model="selectedUrl" ng-disabled="disableInput" delay="onUrlSelect($event)">
+        </div>
       </div>
 
-      <!-- todo: show progress -->
+      <div ng-if="errors.length" class="text-error" bindonce>
+        <div class="alert alert-danger" ng-repeat="msg in errors track by $index" ng-if="msg" ng-bind="msg"></div>
+      </div>
+
+      <div>
+        <div ng-repeat="file in selectedFiles track by $index">
+          <strong>{{file.name}}</strong>
+          <button class="button" ng-click="abort($index)" ng-show="upload[$index] && progress[$index] < 100">Abort</button>
+          <div class="progress" ng-show="progress[$index] >= 0">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{progress[$index]}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress[$index]}}%"></div>
+          </div>
+        </div>
+      </div>
+
       <!-- todo: hide upload zone on upload start and show progress and cancel -->
     </div>
   </div>
@@ -37,8 +41,8 @@
 
 <div class="container" ng-if="data" bindonce>
   <div class="row">
-    <div class="col-sm-12">
-      todo: image here
+    <div class="col-sm-12 text-center">
+      <a bo-href="data.file.imageUrl" target="_blank"><img class="img-thumbnail" bo-src="data.file.thumbUrl" bo-alt="data.file.filename"></a>
     </div>
   </div>
 
@@ -46,43 +50,58 @@
     <div class="col-sm-4"><h3>File</h3></div>
     <div class="col-sm-8">
       <p bo-text="data.file.filename"></p>
-      <p><span bo-text="data.resolution.x"></span>&nbsp;x&nbsp;<span bo-text="data.resolution.y"></span> <span bo-text="data.file.extension"></span> (<span bo-text="Math.floor(data.resolution.x*data.resolution.y/1000)"></span>&nbsp;megapixels)</p>          
+      <p bo-if="data.resolution">
+        <span bo-text="data.resolution.x"></span>&nbsp;x&nbsp;<span bo-text="data.resolution.y"></span>
+        <span bo-text="data.file.extension | uppercase"></span>
+        <span bo-text="data.resolution.megapixels | prefix: '( ' | suffix: ' megapixels )'"></span>
+      </p>
     </div>
   </div>
   
-  <div class="row">
+  <div class="row" bo-if="data.camera">
     <div class="col-sm-4"><h3>Camera</h3></div>
     <div class="col-sm-8">
-      <p><span bo-text="data.camera.make"></span> <span bo-text="data.camera.model"></span></p>
-      <p><span bo-text="data.camera.exposureMode"></span>, Program&nbsp;<span bo-text="data.camera.exposureProgram"></span>, <span bo-text="data.camera.exposureTime"></span>&nbsp;sec, f/<span bo-text="data.camera.fNumber"></span></p>
+      <p>
+        <span bo-text="data.camera.make"></span> <span bo-text="data.camera.model"></span>
+        <span bo-text="data.camera.focalLengthIn35mmFormat | suffix:'mm'"></span>
+        <span bo-text="data.camera.fNumber | prefix: 'f/'"></span>
+        <span bo-text="data.camera.focalLength | prefix: 'Shot at ' | suffix: 'mm'"></span>
+      </p>
+      <p>
+        <span bo-text="data.camera.exposureMode"></span>
+        <span bo-text="data.camera.exposureProgram | prefix: 'Program&nbsp;'"></span>
+        <span bo-text="data.camera.exposureTime | suffix: 'sec'"></span>
+        <span bo-text="data.camera.fNumber | prefix: 'f/'"></span>
+      </p>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" bo-if="data.date">
     <div class="col-sm-4"><h3>Date</h3></div>
     <div class="col-sm-8">
-      <p><span bo-text="data.date.original"></span></p>
-      <p>todo: time ago</p>
+      <p><span bo-text="data.date.original | date:'medium'"></span></p>
+      <p><span bo-text="data.date.createdAgo"></span></p>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-4"></div>
-    <div class="col-sm-8"></div>
-  </div>
-
-  <div class="row">
+  <div class="row" bo-if="data.location">
     <div class="col-sm-4"><h3>Location</h3></div>
     <div class="col-sm-8">
       <p>todo: geocoding </p>
-      <p><span bo-text="data.location.dms.lat"></span>, <span bo-text="data.location.dms.lng"></span></p>
-      <p><span bo-text="data.location.ddd.lat"></span>, <span bo-text="data.location.ddd.lng"></span></p>
+      <p bo-if="data.location.dms"><span bo-text="formatDMSCoord(data.location.dms.lat)"></span>, <span bo-text="formatDMSCoord(data.location.dms.lng)"></span></p>
+      <p bo-if="data.location.ddd"><span bo-text="formatDDDCoord(data.location.ddd.lat)"></span>, <span bo-text="formatDDDCoord(data.location.ddd.lng)"></span></p>
+    </div>
+  </div>
+
+  <div class="row" bo-if="data.location">
+    <div class="col-sm-12">
+      todo: map here
     </div>
   </div>
 
   <div class="row">
-    <div class="col-sm-12">
-      todo: map here
+    <div class="col-sm-12 text-center">
+      <button type="button" class="btn btn-link" ng-click="reset()">Upload More</button>
     </div>
   </div>
 </div>

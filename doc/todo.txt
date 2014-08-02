@@ -1,0 +1,7 @@
+ - clear old files
+ - test production mode
+ - test logger
+ - configure mail reporting on error
+ - mail
+ - geocoding
+ 

@@ -2,6 +2,7 @@
 
 // Production specific configuration
 // =================================
+var root = path.normalize(__dirname + '/../../..');
 module.exports = {
   // Server IP
   ip:       process.env.OPENSHIFT_NODEJS_IP ||
@@ -12,6 +13,10 @@ module.exports = {
   port:     process.env.OPENSHIFT_NODEJS_PORT ||
             process.env.PORT ||
             8080,
+
+  path: {
+    usr: root + '/public/usr'
+  },
 
   // MongoDB connection options
   mongo: {
