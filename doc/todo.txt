@@ -1,7 +1,17 @@
+Need to be impelemted:
  - clear old files
  - test production mode
  - test logger
  - configure mail reporting on error
  - mail
  - geocoding
- 
+
+ - input onPaste fix
+ - input onEnter
+
+Need to be checked:
+    Google Maps Geolocation API
+    100 requests / day
+
+    Google Maps JavaScript API v3
+    25000 requests / day

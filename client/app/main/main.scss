@@ -15,10 +15,8 @@
 
 .hero-unit {
     padding: 30px 15px;
-    color: #F5F5F5;
     text-align: center;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-    background: #4393B9;
 }
 
 
@@ -27,8 +25,7 @@
     margin: 0 auto;
     width: 300px;
     height: 300px;
-    background-color: #dfdfdf;
-    padding-top: 50px;
+     padding-top: 50px;
 }
 
 #upload-zone .drop-zone {
@@ -57,4 +54,9 @@
 }
 .drop-zone.err-over {
   border: 1px solid red;
+}
+
+#map {
+    height:420px;
+    width:100%;
 }

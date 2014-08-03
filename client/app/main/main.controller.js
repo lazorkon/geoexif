@@ -8,7 +8,7 @@ angular.module('app')
       $scope.disableInput = false;
       $scope.data = null;
       $scope.upload = [];
-      $scope.errors = [];
+      $scope.errors = null;
       $scope.progress = [];
       $scope.selectedFiles = [];
       $scope.uploadResult = [];
@@ -21,6 +21,7 @@ angular.module('app')
       debug && console.log('MainCtrl.upload.done', response.data);
       $scope.selectedFiles = [];
       $scope.selectedUrl = '';
+      $scope.disableInput = false;
       $timeout(function() {
         $scope.data = response.data;
       });
@@ -28,9 +29,10 @@ angular.module('app')
 
     var onApiFail = function(response) {
       debug && console.log('MainCtrl.upload.fail', response.data);
-      $scope.errors[index] = response.data;
+      $scope.errors = response.data;
       $scope.selectedFiles = [];
       $scope.selectedUrl = '';
+      $scope.disableInput = false;
     };
   
     $scope.onFileSelect = function($files) {
@@ -39,7 +41,7 @@ angular.module('app')
       $files.length > 1 && ($files = $files.slice(0, 1));
       $scope.selectedFiles = [];
       $scope.progress = [];
-      $scope.errors = [];
+      $scope.errors = null;
       if ($scope.upload && $scope.upload.length > 0) {
         for (i = 0, c = $scope.upload.length; i < c; ++i) {
           if ($scope.upload[i] != null) {
@@ -55,7 +57,7 @@ angular.module('app')
       for (i = 0, c = $files.length; i < c; ++i) {
         file = $files[i];
         if ('image/jpeg' !== file.type) {
-          $scope.errors[i] = 'Selected file is not JPEG image';
+          $scope.errors = 'Selected file is not JPEG image';
           continue;
         }
         $scope.progress[i] = -1;
@@ -65,7 +67,7 @@ angular.module('app')
 
     $scope.start = function(index) {
       $scope.progress[index] = 0;
-      $scope.errors[index] = null;
+      $scope.errors = null;
       $scope.upload[index] = $upload.upload({
         url: '/api/file/upload',
         method: 'POST',

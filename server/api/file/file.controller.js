@@ -18,10 +18,9 @@ exports.url = function(req, res, next) {
   if (!req.body || !req.body.url) {
     return next(new Error('Wrong request'));
   }
-  // todo: turn on validation
-  //  if (!reUrl.test(req.body.url)) {
-  //   return next(new Error('Wrong url format'));
-  //  }
+  if (!reUrl.test(req.body.url)) {
+    return next(new Error('Wrong url format'));
+  }
   var helper = new FileHelper();
   helper.processRemote(req.body.url, function (err, data) {
     if (err) return next(err);
