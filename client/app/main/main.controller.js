@@ -25,6 +25,22 @@ angular.module('app')
       $timeout(function() {
         $scope.data = response.data;
       });
+      if (response.data.location && response.data.location.ddd) {
+        geocode(response.data.location.ddd);
+      }
+    };
+
+    // https://developers.google.com/maps/documentation/geocoding/#ReverseGeocoding
+    var geocode = function (coords) {
+      var lat = +coords.lat, lng = +coords.lng;
+      var url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&language=en&sensor=false';
+      $http.get(url).then(function (response) {
+        debug && console.log('MainCtrl.geocode.done', response.data);
+        var data = response.data, info;
+        if (data && data.results && data.results.length && (info = data.results[0])) {
+          $scope.data.address = info.formatted_address;
+        }
+      });
     };
 
     var onApiFail = function(response) {

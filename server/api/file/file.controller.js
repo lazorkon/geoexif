@@ -53,6 +53,7 @@ exports.upload = function(req, res, next) {
 
   var file = req.files.file;
   var helper = new FileHelper();
+  helper.originalFilename = file.originalname;
   helper.processLocal(file.path, function (err, data) {
     if (err) return next(err);
     res.json(200, data);
@@ -226,11 +227,11 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
         if (err) {
           fs.unlink(imagePath, function (err) { if (err) console.log(err); });
           fs.unlink(config.path.usr + '/' + self.thumbName, function (err) { if (err) console.log(err); });
-          return next(err);
+          return callback(err);
         }
 
         fs.rename(imagePath, config.path.usr + '/' + self.imageName, function (err) {
-          if (err) next(err);
+          if (err) return callback(err);
           var result = data.exif;
           result.file.thumbUrl = '/usr/' + self.thumbName;
           result.file.imageUrl = '/usr/' + self.imageName;

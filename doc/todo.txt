@@ -1,17 +1,30 @@
 Need to be impelemted:
+ - jpeg, tiff, raw image format support
+ - rotate image
+ - progress bar
  - clear old files
  - test production mode
  - test logger
  - configure mail reporting on error
- - mail
- - geocoding
+ - footer links
+ - nearby images
+ - add "graphicsmagick" to package.json
 
  - input onPaste fix
  - input onEnter
 
+ - asyn map load
+ https://developers.google.com/maps/documentation/javascript/examples/map-simple-async
+
 Need to be checked:
-    Google Maps Geolocation API
-    100 requests / day
+    Geocoding API
+    2,500 requests/day
 
     Google Maps JavaScript API v3
-    25000 requests / day
+    25,000 requests/day
+    https://developers.google.com/maps/documentation/javascript/usage
+
+
+-----
+- я раєстрував поштову скриньку для проекту "geoexifofficial@gmail.com", залишаємо її чи реєструємо нову ?
+на неї я реєструю сторонні сервіси, Google Analytics

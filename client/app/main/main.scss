@@ -1,62 +1,54 @@
-.thing-form {
-    margin: 20px 0;
-}
+.page-wrap { border: 3px solid transparent; }
 
-#banner {
-    border-bottom: none;
-    margin-top: -20px;
-}
+.page-wrap.image-over { border: 3px solid #3c763c; background-color: #b6ffd8; }
+.page-wrap.err-over { border: 3px solid #a73b3d; background-color: #ffaaa1; }
 
-#banner h1 {
-    font-size: 60px;
-    line-height: 1;
-    letter-spacing: -1px;
-}
+.page-wrap .drop-it-msg { display: none; }
+.page-wrap.image-over .click-zone, .page-wrap.image-over .url-zone { display: none; }
+.page-wrap.image-over .drop-it-msg { display: block; }
+
 
 .hero-unit {
-    padding: 30px 15px;
-    text-align: center;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  padding: 30px 15px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 }
 
-
-#upload-zone {
-    position: relative;
-    margin: 0 auto;
-    width: 300px;
-    height: 300px;
-     padding-top: 50px;
+.wrap-zone {
+  position: relative;
+  margin: 0 auto;
+  width: 300px;
+  height: 200px;
+  padding-top: 50px;
 }
 
-#upload-zone .drop-zone {
-    width: 100%;
-    height: 80%;
+.wrap-zone .click-zone {
+  cursor: pointer;
+  width: 100%;
+  height: 80%;
 }
 
-#upload-zone [ng-file-select] {
-    width: 100%;
-    height: 100%;
+.wrap-zone [ng-file-select] {
+  width: 100%;
+  height: 100%;
 }
 
-#upload-zone .url-zone {
-    width: 100%;
-    height: 20%;
+.wrap-zone .url-zone {
+  width: 100%;
+  height: 20%;
 }
 
-#upload-zone .url-zone input {
-    width: 100%;
-    height: 100%;
-    text-align: center;
-}
-
-.drop-zone.image-over {
-  border: 1px solid green;
-}
-.drop-zone.err-over {
-  border: 1px solid red;
+.wrap-zone .url-zone input {
+  width: 100%;
+  height: 100%;
+  text-align: center;
 }
 
 #map {
-    height:420px;
-    width:100%;
+  height: 420px;
+  width: 100%;
+}
+
+footer {
+  margin-top: 100px;
 }
