@@ -203,27 +203,44 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
         exif: function (callback) {
           new ExifImage({ image: imagePath }, function (err, info) {
             if (err) return callback(err);
-            var data;
-            try {
-              data = self.convertExif({
-                filename: self.originalFilename || path.basename(imagePath),
-                size: stat.size
-              }, info);
-              callback(null, data);
-            } catch (e) {
-              callback(e);
+            if ('development' === process.env.NODE_ENV) {
+              console.log('exif: ', info);
             }
+            callback(null, info);
           });
         },
         thumb: function (callback) {
+          var result = null;
           gm(imagePath)
+            .size(function (err, value) {
+              if (err) return;
+              if (value) {
+                result = result || {};
+                result.width = value.width;
+                result.height = value.height;
+              }
+            })
             .resize(300)
+            .autoOrient()
             .write(config.path.usr + '/' + self.thumbName, function (err) {
               if (err) return callback(err);
-              callback(null);
+              callback(null, result);
             });
         }
       }, function (err, data) {
+        var data;
+        if (!err) {
+          try {
+            data = self.convertExif({
+              filename: self.originalFilename || path.basename(imagePath),
+              size: stat.size,
+              resolution: data.thumb
+            }, data.exif);
+          } catch (e) {
+            err = e;
+          }
+        }
+
         if (err) {
           fs.unlink(imagePath, function (err) { if (err) console.log(err); });
           fs.unlink(config.path.usr + '/' + self.thumbName, function (err) { if (err) console.log(err); });
@@ -232,7 +249,7 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
 
         fs.rename(imagePath, config.path.usr + '/' + self.imageName, function (err) {
           if (err) return callback(err);
-          var result = data.exif;
+          var result = data;
           result.file.thumbUrl = '/usr/' + self.thumbName;
           result.file.imageUrl = '/usr/' + self.imageName;
           callback(null, result);
@@ -313,22 +330,26 @@ FileHelper.prototype.convertExif = function (file, info) {
   }
 
   if (info.image) {
-    data.resolution = {
-      x: info.image.XResolution,
-      y: info.image.YResolution,
-      megapizels: Math.floor(info.image.XResolution * info.image.YResolution / 1000000).toFixed(1)
-    };
-    if (data.resolution.megapizels === '0.0') data.resolution.megapizels = 0;
+    data.resolution = {};
+    if (file.resolution) {
+      data.resolution.x = file.resolution.width;
+      data.resolution.y = file.resolution.height;
+    } else {
+      data.resolution.x = info.image.XResolution;
+      data.resolution.y = info.image.YResolution;
+    }
+    data.resolution.megapixels = (data.resolution.x * data.resolution.y / 1000000).toFixed(1);
+    if (data.resolution.megapixels === '0.0') data.resolution.megapixels = 0;
   }
 
   if (info.exif) {
     data.camera = {
       focalLength: info.exif.FocalLength,
-      focalLengthIn35mmFormat: info.exif.FocalLengthIn35mmFormat,
       exposureMode: exifInfo.ExposureMode[info.exif.ExposureMode],
       exposureProgram: exifInfo.ExposureProgram[info.exif.ExposureProgram],
       exposureTime: info.exif.ExposureTime < 1 ? '1/' + Math.floor(1 / info.exif.ExposureTime) : info.exif.ExposureTime,
       fNumber: info.exif.FNumber,
+      ISO: info.exif.ISO,
       make: info.image.Make,
       model: info.image.Model
     };

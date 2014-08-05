@@ -7,7 +7,7 @@
     </div>
   </header>
 
-  <div class="container" ng-hide="data || errors">
+  <div class="container" ng-hide="data || errors || selected">
     <div class="row">
       <div class="col-sm-12">
         <div class="wrap-zone" ng-form="form">
@@ -35,18 +35,20 @@
 
         </div>
 
-        <div>
-          <div ng-repeat="file in selectedFiles track by $index">
-            <strong>{{file.name}}</strong>
-            <button class="button" ng-click="abort($index)" ng-show="upload[$index] && progress[$index] < 100">Abort</button>
-            <div class="progress" ng-show="progress[$index] >= 0">
-              <div class="progress-bar" role="progressbar" aria-valuenow="{{progress[$index]}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress[$index]}}%"></div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
+  </div>
+
+  <div class="container" ng-show="selected && !errors">
+      <div class="row">
+        <div class="col-sm-12 text-center">
+          <strong>{{selected.name}}</strong>
+          <!-- <button class="button" ng-click="abort($index)" ng-show="upload[$index] && progress[$index] < 100">Abort</button> -->
+          <div class="progress">
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%"></div>
+          </div>
+        </div>
+      </div>
   </div>
 
   <div class="container" ng-if="errors">
@@ -61,7 +63,7 @@
     </div>
   </div>
 
-  <div class="container" ng-if="data" bindonce>
+  <div class="container" ng-if="data && !selected" bindonce>
     <div class="row">
       <div class="col-sm-12 text-center">
         <h3>Picture</h3>
@@ -85,15 +87,15 @@
         <h3>Camera</h3>
         <p>
           <span bo-text="data.camera.make"></span> <span bo-text="data.camera.model"></span>
-          <span bo-text="data.camera.focalLengthIn35mmFormat | suffix:'mm'"></span>
+          <span bo-text="data.camera.focalLength | suffix:'mm'"></span>
           <span bo-text="data.camera.fNumber | prefix: 'f/'"></span>
-          <span bo-text="data.camera.focalLength | prefix: 'Shot at ' | suffix: 'mm'"></span>
         </p>
         <p>
           <span bo-text="data.camera.exposureMode"></span>
           <span bo-text="data.camera.exposureProgram | prefix: 'Program&nbsp;'"></span>
           <span bo-text="data.camera.exposureTime | suffix: 'sec'"></span>
           <span bo-text="data.camera.fNumber | prefix: 'f/'"></span>
+          <span bo-if="data.camera.ISO" bo-text="data.camera.ISO | prefix: 'ISO '"></span>
         </p>
       </div>
     </div>

@@ -9,8 +9,8 @@ angular.module('app')
       $scope.data = null;
       $scope.upload = [];
       $scope.errors = null;
-      $scope.progress = [];
-      $scope.selectedFiles = [];
+      $scope.progress = null;
+      $scope.selected = null;
       $scope.uploadResult = [];
       $scope.selectedUrl = '';
     };
@@ -19,7 +19,8 @@ angular.module('app')
 
     var onApiDone = function(response) {
       debug && console.log('MainCtrl.upload.done', response.data);
-      $scope.selectedFiles = [];
+      $scope.data = null;
+      $scope.selected = null;
       $scope.selectedUrl = '';
       $scope.disableInput = false;
       $timeout(function() {
@@ -46,7 +47,7 @@ angular.module('app')
     var onApiFail = function(response) {
       debug && console.log('MainCtrl.upload.fail', response.data);
       $scope.errors = response.data;
-      $scope.selectedFiles = [];
+      $scope.selected = null;
       $scope.selectedUrl = '';
       $scope.disableInput = false;
     };
@@ -55,8 +56,8 @@ angular.module('app')
       debug && console.log('onFileSelect', $files);
       var i, c;
       $files.length > 1 && ($files = $files.slice(0, 1));
-      $scope.selectedFiles = [];
-      $scope.progress = [];
+      $scope.selected = null;
+      $scope.progress = null;
       $scope.errors = null;
       if ($scope.upload && $scope.upload.length > 0) {
         for (i = 0, c = $scope.upload.length; i < c; ++i) {
@@ -66,33 +67,33 @@ angular.module('app')
         }
       }
       
+      var file = $files[0];
       $scope.upload = [];
       $scope.uploadResult = [];
-      $scope.selectedFiles = $files;
-      var file;
-      for (i = 0, c = $files.length; i < c; ++i) {
-        file = $files[i];
-        if ('image/jpeg' !== file.type) {
-          $scope.errors = 'Selected file is not JPEG image';
-          continue;
-        }
-        $scope.progress[i] = -1;
-        $scope.start(i);
+      $scope.selected = file;
+      // todo: fix validation
+      if ('image/jpeg' !== file.type) {
+        $scope.errors = 'Selected file is not JPEG image';
+        return;
       }
+
+      $scope.progress = -1;
+      $scope.start(i);
     };
 
     $scope.start = function(index) {
-      $scope.progress[index] = 0;
+      $scope.progress = 0;
       $scope.errors = null;
       $scope.upload[index] = $upload.upload({
         url: '/api/file/upload',
         method: 'POST',
-        file: $scope.selectedFiles[index],
+        file: $scope.selected,
         fileFormDataName: 'file'
       });
 
       $scope.upload[index].then(onApiDone, onApiFail, function(e) {
-        $scope.progress[index] = Math.min(100, parseInt(100.0 * e.loaded / e.total));
+        debug && console.log('--- progress', e);
+        $scope.progress = Math.min(100, parseInt(100.0 * e.loaded / e.total));
       });
     };
 
