@@ -298,7 +298,7 @@ module.exports = function (grunt) {
     ngtemplates: {
       options: {
         // This should be the name of your apps angular module
-        module: 'geoExifApp',
+        module: 'app',
         htmlmin: {
           collapseBooleanAttributes: true,
           collapseWhitespace: true,
@@ -340,6 +340,7 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             '.htaccess',
+            'usr',
             'bower_components/**/*',
             'assets/images/{,*/}*.{webp}',
             'assets/fonts/**/*',
@@ -354,6 +355,7 @@ module.exports = function (grunt) {
           expand: true,
           dest: '<%= yeoman.dist %>',
           src: [
+            'tmp',
             'package.json',
             'server/**/*'
           ]
@@ -618,7 +620,7 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
-    'cdnify',
+    // 'cdnify',
     'cssmin',
     'uglify',
     'rev',

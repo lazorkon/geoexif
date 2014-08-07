@@ -1,33 +1,17 @@
-Need to be impelemted:
- - limit 30M
- - register accounts
- - upload to hosting
-
-
 test analytics
-
  - jpeg, tiff, raw image format support
- - clear old files
- - nearby images
+ - increase size limit to 30M
+ - nearby images ?
  + integrate uservoice.com
+ + google analytics
  - copy to clipboard
- - google analytics
- 
+ - use google map with API key
+
  - add "graphicsmagick" to package.json
- - test production mode
- - test logger
  - configure mail reporting on error
 
  - input onPaste fix
  - input onEnter
 
- - asyn map load
+ - async map load
  https://developers.google.com/maps/documentation/javascript/examples/map-simple-async
-
-Need to be checked:
-    Geocoding API
-    2,500 requests/day
-
-    Google Maps JavaScript API v3
-    25,000 requests/day
-    https://developers.google.com/maps/documentation/javascript/usage
