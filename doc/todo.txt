@@ -1,14 +1,22 @@
 Need to be impelemted:
+ - limit 30M
+ - register accounts
+ - upload to hosting
+
+
+test analytics
+
  - jpeg, tiff, raw image format support
- - rotate image
- - progress bar
  - clear old files
+ - nearby images
+ + integrate uservoice.com
+ - copy to clipboard
+ - google analytics
+ 
+ - add "graphicsmagick" to package.json
  - test production mode
  - test logger
  - configure mail reporting on error
- - footer links
- - nearby images
- - add "graphicsmagick" to package.json
 
  - input onPaste fix
  - input onEnter
@@ -23,8 +31,3 @@ Need to be checked:
     Google Maps JavaScript API v3
     25,000 requests/day
     https://developers.google.com/maps/documentation/javascript/usage
-
-
------
-- я раєстрував поштову скриньку для проекту "geoexifofficial@gmail.com", залишаємо її чи реєструємо нову ?
-на неї я реєструю сторонні сервіси, Google Analytics

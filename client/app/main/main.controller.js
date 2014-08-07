@@ -92,7 +92,6 @@ angular.module('app')
       });
 
       $scope.upload[index].then(onApiDone, onApiFail, function(e) {
-        debug && console.log('--- progress', e);
         $scope.progress = Math.min(100, parseInt(100.0 * e.loaded / e.total));
       });
     };

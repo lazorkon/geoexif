@@ -1,5 +1,7 @@
 'use strict';
 
+var debug = ('development' === process.env.NODE_ENV);
+
 var _ = require('lodash');
 var fs = require('fs');
 var http = require('http');
@@ -203,9 +205,7 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
         exif: function (callback) {
           new ExifImage({ image: imagePath }, function (err, info) {
             if (err) return callback(err);
-            if ('development' === process.env.NODE_ENV) {
-              console.log('exif: ', info);
-            }
+            debug && console.log('exif: ', info);
             callback(null, info);
           });
         },
@@ -247,13 +247,25 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
           return callback(err);
         }
 
-        fs.rename(imagePath, config.path.usr + '/' + self.imageName, function (err) {
-          if (err) return callback(err);
-          var result = data;
-          result.file.thumbUrl = '/usr/' + self.thumbName;
-          result.file.imageUrl = '/usr/' + self.imageName;
-          callback(null, result);
-        });
+        fs.unlink(imagePath, function (err) { if (err) console.log(err); });
+
+        var result = data;
+        result.file.thumbUrl = '/usr/' + self.thumbName;
+        // result.file.imageUrl = '/usr/' + self.imageName;
+
+        setTimeout((function (tmpImagePath) {
+          return function () {
+            fs.unlink(tmpImagePath, function () {});
+          };
+        })(config.path.usr + '/' + self.thumbName), 5000);
+
+        
+        callback(null, result);
+
+        // fs.rename(imagePath, config.path.usr + '/' + self.imageName, function (err) {
+        //   if (err) return callback(err);
+        //   callback(null, result);
+        // });
 
       });
 
@@ -351,7 +363,8 @@ FileHelper.prototype.convertExif = function (file, info) {
       fNumber: info.exif.FNumber,
       ISO: info.exif.ISO,
       make: info.image.Make,
-      model: info.image.Model
+      model: info.image.Model,
+      LensModel: info.exif.LensModel
     };
   }
   

@@ -1,5 +1,6 @@
 # install graphicsmagick
 sudo apt-get install graphicsmagick
+sudo apt-get install exiv2
 
 # install build tools (to resolve "Failed to load c++ bson extension, using pure JS version")
 sudo apt-get install gcc make build-essential

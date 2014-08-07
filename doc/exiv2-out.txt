@@ -1,0 +1,124 @@
+# exiv2 -qpt ~/Pictures/exif/gg_gps.jpg
+Exif.Image.Make                              Ascii      18  NIKON CORPORATION
+Exif.Image.Model                             Ascii      10  NIKON D2H
+Exif.Image.Orientation                       Short       1  top, left
+Exif.Image.XResolution                       Rational    1  256
+Exif.Image.YResolution                       Rational    1  256
+Exif.Image.ResolutionUnit                    Short       1  inch
+Exif.Image.Software                          Ascii      17  Opanda PowerExif
+Exif.Image.DateTime                          Ascii      20  2005:07:02 10:38:28
+Exif.Image.ExifTag                           Long        1  216
+Exif.Photo.ExposureTime                      Rational    1  1/125 s
+Exif.Photo.FNumber                           Rational    1  F4.5
+Exif.Photo.ExposureProgram                   Short       1  Aperture priority
+Exif.Photo.ExifVersion                       Undefined   4  2.20
+Exif.Photo.DateTimeOriginal                  Ascii      20  2003:11:23 18:07:37
+Exif.Photo.DateTimeDigitized                 Ascii      20  2003:11:23 18:07:37
+Exif.Photo.CompressedBitsPerPixel            Rational    1  4
+Exif.Photo.ExposureBiasValue                 SRational   1  0 EV
+Exif.Photo.MaxApertureValue                  Rational    1  F2.8
+Exif.Photo.MeteringMode                      Short       1  Spot
+Exif.Photo.LightSource                       Short       1  Unknown
+Exif.Photo.Flash                             Short       1  No flash
+Exif.Photo.FocalLength                       Rational    1  23.3 mm
+Exif.Photo.UserComment                       Undefined  36  taken at basilica of chinese
+Exif.Photo.SubSecTime                        Ascii       3  63
+Exif.Photo.SubSecTimeOriginal                Ascii       3  63
+Exif.Photo.SubSecTimeDigitized               Ascii       3  63
+Exif.Photo.FlashpixVersion                   Undefined   4  1.00
+Exif.Photo.ColorSpace                        Short       1  Uncalibrated
+Exif.Photo.PixelXDimension                   Long        1  500
+Exif.Photo.PixelYDimension                   Long        1  375
+Exif.Photo.RelatedSoundFile                  Ascii      13              
+Exif.Photo.SensingMethod                     Short       1  One-chip color area
+Exif.Photo.FileSource                        Undefined   1  Digital still camera
+Exif.Photo.SceneType                         Undefined   1  Directly photographed
+Exif.Photo.CFAPattern                        Undefined   8  0 2 0 2 1 2 0 1
+Exif.Photo.CustomRendered                    Short       1  Normal process
+Exif.Photo.ExposureMode                      Short       1  Auto
+Exif.Photo.WhiteBalance                      Short       1  Auto
+Exif.Photo.DigitalZoomRatio                  Rational    1  1.0
+Exif.Photo.FocalLengthIn35mmFilm             Short       1  35.0 mm
+Exif.Photo.SceneCaptureType                  Short       1  Standard
+Exif.Photo.GainControl                       Short       1  Low gain up
+Exif.Photo.Contrast                          Short       1  Soft
+Exif.Photo.Saturation                        Short       1  Normal
+Exif.Photo.Sharpness                         Short       1  Normal
+Exif.Photo.SubjectDistanceRange              Short       1  Unknown
+Exif.Image.GPSTag                            Long        1  820
+Exif.GPSInfo.GPSVersionID                    Byte        4  2.2.0.0
+Exif.GPSInfo.GPSLatitudeRef                  Ascii       2  North
+Exif.GPSInfo.GPSLatitude                     Rational    3  39deg 54' 56" 
+Exif.GPSInfo.GPSLongitudeRef                 Ascii       2  East
+Exif.GPSInfo.GPSLongitude                    Rational    3  116deg 23' 27" 
+Exif.GPSInfo.GPSTimeStamp                    Rational    3  18:07:37
+Exif.GPSInfo.GPSDateStamp                    Ascii      11  2003:11:23
+Exif.Thumbnail.Compression                   Short       1  JPEG (old-style)
+Exif.Thumbnail.XResolution                   Rational    1  72
+Exif.Thumbnail.YResolution                   Rational    1  72
+Exif.Thumbnail.ResolutionUnit                Short       1  inch
+Exif.Thumbnail.JPEGInterchangeFormat         Long        1  1088
+Exif.Thumbnail.JPEGInterchangeFormatLength   Long        1  4034
+
+
+// exiv2 -q -PEkycv ~/Pictures/exif/gg_gps.jpg
+Exif.Image.Make                              Ascii      18  NIKON CORPORATION
+Exif.Image.Model                             Ascii      10  NIKON D2H
+Exif.Image.Orientation                       Short       1  1
+Exif.Image.XResolution                       Rational    1  256/1
+Exif.Image.YResolution                       Rational    1  256/1
+Exif.Image.ResolutionUnit                    Short       1  2
+Exif.Image.Software                          Ascii      17  Opanda PowerExif
+Exif.Image.DateTime                          Ascii      20  2005:07:02 10:38:28
+Exif.Image.ExifTag                           Long        1  216
+Exif.Photo.ExposureTime                      Rational    1  1/125
+Exif.Photo.FNumber                           Rational    1  45/10
+Exif.Photo.ExposureProgram                   Short       1  3
+Exif.Photo.ExifVersion                       Undefined   4  48 50 50 48
+Exif.Photo.DateTimeOriginal                  Ascii      20  2003:11:23 18:07:37
+Exif.Photo.DateTimeDigitized                 Ascii      20  2003:11:23 18:07:37
+Exif.Photo.CompressedBitsPerPixel            Rational    1  4/1
+Exif.Photo.ExposureBiasValue                 SRational   1  0/6
+Exif.Photo.MaxApertureValue                  Rational    1  3/1
+Exif.Photo.MeteringMode                      Short       1  3
+Exif.Photo.LightSource                       Short       1  0
+Exif.Photo.Flash                             Short       1  0
+Exif.Photo.FocalLength                       Rational    1  2333/100
+Exif.Photo.UserComment                       Undefined  36  taken at basilica of chinese
+Exif.Photo.SubSecTime                        Ascii       3  63
+Exif.Photo.SubSecTimeOriginal                Ascii       3  63
+Exif.Photo.SubSecTimeDigitized               Ascii       3  63
+Exif.Photo.FlashpixVersion                   Undefined   4  48 49 48 48
+Exif.Photo.ColorSpace                        Short       1  65535
+Exif.Photo.PixelXDimension                   Long        1  500
+Exif.Photo.PixelYDimension                   Long        1  375
+Exif.Photo.RelatedSoundFile                  Ascii      13              
+Exif.Photo.SensingMethod                     Short       1  2
+Exif.Photo.FileSource                        Undefined   1  3
+Exif.Photo.SceneType                         Undefined   1  1
+Exif.Photo.CFAPattern                        Undefined   8  0 2 0 2 1 2 0 1
+Exif.Photo.CustomRendered                    Short       1  0
+Exif.Photo.ExposureMode                      Short       1  0
+Exif.Photo.WhiteBalance                      Short       1  0
+Exif.Photo.DigitalZoomRatio                  Rational    1  1/1
+Exif.Photo.FocalLengthIn35mmFilm             Short       1  35
+Exif.Photo.SceneCaptureType                  Short       1  0
+Exif.Photo.GainControl                       Short       1  1
+Exif.Photo.Contrast                          Short       1  1
+Exif.Photo.Saturation                        Short       1  0
+Exif.Photo.Sharpness                         Short       1  0
+Exif.Photo.SubjectDistanceRange              Short       1  0
+Exif.Image.GPSTag                            Long        1  820
+Exif.GPSInfo.GPSVersionID                    Byte        4  2 2 0 0
+Exif.GPSInfo.GPSLatitudeRef                  Ascii       2  N
+Exif.GPSInfo.GPSLatitude                     Rational    3  39/1 54/1 56/1
+Exif.GPSInfo.GPSLongitudeRef                 Ascii       2  E
+Exif.GPSInfo.GPSLongitude                    Rational    3  116/1 23/1 27/1
+Exif.GPSInfo.GPSTimeStamp                    Rational    3  18/1 7/1 37/1
+Exif.GPSInfo.GPSDateStamp                    Ascii      11  2003:11:23
+Exif.Thumbnail.Compression                   Short       1  6
+Exif.Thumbnail.XResolution                   Rational    1  72/1
+Exif.Thumbnail.YResolution                   Rational    1  72/1
+Exif.Thumbnail.ResolutionUnit                Short       1  2
+Exif.Thumbnail.JPEGInterchangeFormat         Long        1  1088
+Exif.Thumbnail.JPEGInterchangeFormatLength   Long        1  4034

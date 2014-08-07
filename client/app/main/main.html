@@ -1,7 +1,7 @@
 <div class="page-wrap" ng-file-drop="onFileSelect($files)" ng-file-drop-available="dropSupported=true" ng-file-drag-over-class="getDragOverClass($event)">
   <header class="hero-unit" ng-class="{slim: data}">
     <div class="container">
-      <h1>GETPICTAG</h1>
+      <h1>TAGMAZING</h1>
       <button ng-show="data" type="button" class="btn btn-link" ng-click="reset()"><span class="glyphicon glyphicon-arrow-left"></span> UPLOAD AGAIN</button>
       <p ng-hide="data" class="lead">Discover where and how your picture has been make</p>
     </div>
@@ -55,7 +55,7 @@
     <div class="row">
       <div class="col-sm-12 text-center">
         <p class="text-danger" role="alert">ARE YOU SURE, THAT YOUR FILE IS SUITABLE?</p>
-        <p>jpg, tiff</p>
+        <p>jpg</p>
         <!-- png, bmp, raw, cr2, crw, pict, xmp, dng -->
         <p>15Mb</p>
         <button type="button" class="btn btn-link" ng-click="reset()"><span class="glyphicon glyphicon-arrow-left"></span> UPLOAD AGAIN</button>
@@ -78,7 +78,7 @@
 
     <div class="row">
       <div class="col-sm-12 text-center">
-        <a bo-href="data.file.imageUrl" target="_blank"><img class="img-thumbnail" bo-src="data.file.thumbUrl" bo-alt="data.file.filename"></a>
+        <img class="img-thumbnail" bo-src="data.file.thumbUrl" bo-alt="data.file.filename">
       </div>
     </div>
 
@@ -87,12 +87,13 @@
         <h3>Camera</h3>
         <p>
           <span bo-text="data.camera.make"></span> <span bo-text="data.camera.model"></span>
-          <span bo-text="data.camera.focalLength | suffix:'mm'"></span>
-          <span bo-text="data.camera.fNumber | prefix: 'f/'"></span>
+        </p>
+        <p bo-if="data.camera.LensModel">
+          <span bo-text="data.camera.LensModel"></span>
         </p>
         <p>
           <span bo-text="data.camera.exposureMode"></span>
-          <span bo-text="data.camera.exposureProgram | prefix: 'Program&nbsp;'"></span>
+          <span bo-text="data.camera.exposureProgram"></span>
           <span bo-text="data.camera.exposureTime | suffix: 'sec'"></span>
           <span bo-text="data.camera.fNumber | prefix: 'f/'"></span>
           <span bo-if="data.camera.ISO" bo-text="data.camera.ISO | prefix: 'ISO '"></span>
@@ -104,7 +105,7 @@
       <div class="col-sm-12 text-center">
         <h3>Date</h3>
         <p><span bo-text="data.date.original | date:'medium'"></span></p>
-        <p><span bo-text="data.date.createdAgo"></span></p>
+        <p><span bo-text="data.date.originalAgo"></span></p>
       </div>
     </div>
 
@@ -128,7 +129,7 @@
 
   <footer>
       <div class="container text-center">
-      Developed by <a href="">Vitya</a>, <a href="">Vadym</a>, <a href="">Nikita</a>. Please leave your <a href="">Feedback here</a>
+      Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nikita</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button>
       </div>
   </footer>
 </div>
