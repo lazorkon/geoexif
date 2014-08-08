@@ -9,6 +9,7 @@ html, body, [ui-view], .page-wrap {
   min-height: 100%;
   /* equal to footer height */
   margin-bottom: -36px; 
+  @include fix-3d();
 }
 .stick:after {
   content: "";
@@ -22,15 +23,24 @@ footer p {
   margin: 0;
 }
 
+h1 {
+  font-family: "Letter Gothic Std", Helvetica, Arial, sans;
+}
+.v-center {
+  padding: 50px 0 0;
+  width: 100%;
+  @include vertical-align();
+}
 
 .page-wrap { 
+  text-align: center;
   border: 3px solid #fff;
   &.image-over { 
-    border-color:#3c763c; 
-    background: #b6ffd8;
+    border-color:$brand-success;
+    background: #fffafa;
   }
   &.err-over { 
-    border-color:#a73b3d; 
+    border-color:$brand-danger; 
     background: #ffaaa1;
   }
 }
@@ -42,38 +52,53 @@ footer p {
   .drop-it-msg { display: block; }
 }
 
-
-.wrap-zone {
+// Header
+header {
+  padding: 50px 0 0;
   position: relative;
+  .btn-back {
+    position: absolute;
+    left: 0;
+    top: 20px;
+  }
+  &.slim {
+    padding-top: 20px;
+  }
+}
+.btn-back, .btn-info {
+  i {color: $text-color}
+}
+
+// Drop zone
+.wrap-zone {
+  width: 365px;
   margin: 0 auto;
-  width: 300px;
-  height: 200px;
-  padding-top: 50px;
+  .click-zone {
+    padding: 25px 0;
+    cursor: pointer;
+  }
+  [ng-file-select] {}
+  .url-zone {
+    input {
+      text-align: center;
+      text-transform: uppercase;
+      font-size: $font-size-small;
+    }
+  }
+
 }
 
-.wrap-zone .click-zone {
-  cursor: pointer;
-  width: 100%;
-  height: 80%;
-}
-
-.wrap-zone [ng-file-select] {
-  width: 100%;
-  height: 100%;
-}
-
-.wrap-zone .url-zone {
-  width: 100%;
-  height: 20%;
-}
-
-.wrap-zone .url-zone input {
-  width: 100%;
-  height: 100%;
-  text-align: center;
+// Info page
+.info {
+  margin: $line-height-computed 0;
+  p {margin: 0;}
+  img {
+    margin: $line-height-computed/2 0;
+  }
 }
 
 #map {
+  margin: $line-height-computed/2 0;
   height: 420px;
   width: 100%;
 }

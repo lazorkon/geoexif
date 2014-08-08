@@ -35,7 +35,7 @@ h3, .h3 {
 h4, .h4,
 h5, .h5,
 h6, .h6 {
-  margin-top: ($line-height-computed / 2);
+  margin-top: 0;
   margin-bottom: ($line-height-computed / 2);
 
   small,
@@ -74,9 +74,11 @@ p {
 // Emphasis & misc
 // -------------------------
 
+strong {font-family: $headings-font-family;}
+
 // Ex: 14px base font * 85% = about 12px
 small,
-.small  { font-size: 85%; }
+.small  { font-size: 68%; }
 
 // Undo browser default styling
 cite    { font-style: normal; }

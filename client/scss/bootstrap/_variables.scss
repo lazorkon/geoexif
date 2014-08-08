@@ -18,10 +18,10 @@ $gray-light:             lighten(#000, 60%) !default;   // #999
 $gray-lighter:           lighten(#000, 93.5%) !default; // #eee
 
 $brand-primary:         #428bca !default;
-$brand-success:         #5cb85c !default;
-$brand-info:            #5bc0de !default;
+$brand-success:         #2ab75c !default;
+$brand-info:            #eeeef8 !default;
 $brand-warning:         #f0ad4e !default;
-$brand-danger:          #d9534f !default;
+$brand-danger:          #f86262 !default;
 
 
 //== Scaffolding
@@ -36,7 +36,7 @@ $text-color:            #909090 !default;
 //** Global textual link color.
 $link-color:            #0000ff !default;
 //** Link hover color set via `darken()` function.
-$link-hover-color:      darken($link-color, 15%) !default;
+$link-hover-color:      #5001e0 !default;
 
 
 //== Typography
@@ -103,7 +103,7 @@ $padding-xs-horizontal:     5px !default;
 $line-height-large:         1.33 !default;
 $line-height-small:         1.5 !default;
 
-$border-radius-base:        4px !default;
+$border-radius-base:        0 !default;
 $border-radius-large:       6px !default;
 $border-radius-small:       3px !default;
 
@@ -142,7 +142,7 @@ $table-border-color:            #ddd !default;
 //== Buttons
 //
 //## For each of Bootstrap's buttons, define text, background and border color.
-
+$btn-font-family:				 $headings-font-family;
 $btn-font-weight:                normal !default;
 
 $btn-default-color:              #333 !default;
@@ -629,7 +629,7 @@ $alert-danger-border:         $state-danger-border !default;
 //##
 
 //** Background color of the whole progress component
-$progress-bg:                 #f5f5f5 !default;
+$progress-bg:                 #d0f0db !default;
 //** Progress bar text color
 $progress-bar-color:          #fff !default;
 
