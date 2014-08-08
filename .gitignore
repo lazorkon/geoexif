@@ -10,3 +10,4 @@ dist
 /.idea
 /tmp/*
 /client/usr/*
+.DS_Store

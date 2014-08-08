@@ -1,8 +1,29 @@
-$icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
-$fa-font-path: "/bower_components/font-awesome/fonts";
+@font-face {
+	font-family: 'Knowledge-Light';
+	src: url('/assets/fonts/Knowledge-Light.eot');
+	src: 
+		local('☺'), 
+		url('/assets/fonts/Knowledge-Light.woff') format('woff'), 
+		url('/assets/fonts/Knowledge-Light.ttf') format('truetype'), 
+		url('/assets/fonts/Knowledge-Light.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
 
-@import 'bootstrap-sass-official/vendor/assets/stylesheets/bootstrap';
-@import 'font-awesome/scss/font-awesome';
+@font-face {
+	font-family: 'Knowledge-Medium';
+	src: url('/assets/fonts/Knowledge-Medium.eot');
+	src: 
+		local('☺'), 
+		url('/assets/fonts/Knowledge-Medium.woff') format('woff'), 
+		url('/assets/fonts/Knowledge-Medium.ttf') format('truetype'), 
+		url('/assets/fonts/Knowledge-Medium.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+
+@import '../scss/bootstrap';
 
 /**
  * App-wide Styles
