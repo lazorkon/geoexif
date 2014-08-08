@@ -2,8 +2,6 @@ test analytics
  - jpeg, tiff, raw image format support
  - increase size limit to 30M
  - nearby images ?
- + integrate uservoice.com
- + google analytics
  - copy to clipboard
  - use google map with API key
 
@@ -13,5 +11,3 @@ test analytics
  - input onPaste fix
  - input onEnter
 
- - async map load
- https://developers.google.com/maps/documentation/javascript/examples/map-simple-async

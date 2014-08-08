@@ -1,6 +1,9 @@
 'use strict';
 
 module.exports = function (grunt) {
+  var fs = require('fs');
+  var path = require('path');
+
   var localConfig;
   try {
     localConfig = require('./server/config/local.env');
@@ -440,8 +443,8 @@ module.exports = function (grunt) {
             '<%= yeoman.client %>/app',
             '<%= yeoman.client %>/components'
           ],
-          compass: false,
-          sourcemap: true
+          compass: false
+          // sourcemap: true
         },
         files: {
           '.tmp/app/app.css' : '<%= yeoman.client %>/app/app.scss'
@@ -509,6 +512,42 @@ module.exports = function (grunt) {
             '<%= yeoman.client %>/{app,components}/**/*.css'
           ]
         }
+      },
+
+      preHtml: {
+        options: {
+          starttag: '<!-- injector:pre-html -->',
+          endtag: '<!-- endinjector -->',
+          transform: function (filepath) { return fs.readFileSync(path.join(__dirname, filepath)); }
+        },
+        files: { '<%= yeoman.client %>/index.html': ['<%= yeoman.client %>/target-html/pre-all*.html'] }
+      },
+
+      postHtml: {
+        options: {
+          starttag: '<!-- injector:post-html -->',
+          endtag: '<!-- endinjector -->',
+          transform: function (filepath) { return fs.readFileSync(path.join(__dirname, filepath)); }
+        },
+        files: { '<%= yeoman.client %>/index.html': ['<%= yeoman.client %>/target-html/post-all*.html'] }
+      },
+
+      preHtmlDist: {
+        options: {
+          starttag: '<!-- injector:pre-html -->',
+          endtag: '<!-- endinjector -->',
+          transform: function (filepath) { return fs.readFileSync(path.join(__dirname, filepath)); }
+        },
+        files: { '<%= yeoman.dist %>/public/index.html': ['<%= yeoman.client %>/target-html/pre-dist*.html'] }
+      },
+
+      postHtmlDist: {
+        options: {
+          starttag: '<!-- injector:post-html -->',
+          endtag: '<!-- endinjector -->',
+          transform: function (filepath) { return fs.readFileSync(path.join(__dirname, filepath)); }
+        },
+        files: { '<%= yeoman.dist %>/public/index.html': ['<%= yeoman.client %>/target-html/post-dist*.html'] }
       }
     },
   });
@@ -613,6 +652,8 @@ module.exports = function (grunt) {
     'clean:dist',
     'injector:sass', 
     'concurrent:dist',
+    'injector:preHtml',
+    'injector:postHtml',
     'injector',
     'bowerInstall',
     'useminPrepare',
@@ -621,6 +662,8 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
+    'injector:preHtmlDist',
+    'injector:postHtmlDist',
     // 'cdnify',
     'cssmin',
     'uglify',

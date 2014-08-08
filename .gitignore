@@ -9,5 +9,6 @@ dist
 /*.sublime-workspace
 /.idea
 /tmp/*
+/log/*
 /client/usr/*
 .DS_Store
