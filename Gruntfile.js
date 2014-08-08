@@ -84,7 +84,7 @@ module.exports = function (grunt) {
       },
       sass: {
         files: [
-          '<%= yeoman.client %>/{app,components}/**/*.{scss,sass}'],
+          '<%= yeoman.client %>/{app,components,scss}/**/*.{scss,sass}'],
         tasks: ['sass', 'autoprefixer']
       },
       gruntfile: {
@@ -440,7 +440,8 @@ module.exports = function (grunt) {
             '<%= yeoman.client %>/app',
             '<%= yeoman.client %>/components'
           ],
-          compass: false
+          compass: false,
+          sourcemap: true
         },
         files: {
           '.tmp/app/app.css' : '<%= yeoman.client %>/app/app.scss'

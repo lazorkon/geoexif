@@ -3,6 +3,7 @@
 angular.module('app', [
   'ngCookies',
   'ngResource',
+  'ngAnimate',
   'ngSanitize',
   'ui.router',
   'pasvaz.bindonce',

@@ -1,54 +1,104 @@
-.page-wrap { border: 3px solid transparent; }
+// Sticky footer
+* {
+  margin: 0;
+}
+html, body, [ui-view], .page-wrap {
+  height: 100%;
+}
+.stick {
+  min-height: 100%;
+  /* equal to footer height */
+  margin-bottom: -36px; 
+  @include fix-3d();
+}
+.stick:after {
+  content: "";
+  display: block;
+}
+footer, .stick:after {
+  /* .push must be the same height as footer */
+  height: 36px; 
+}
+footer p {
+  margin: 0;
+}
 
-.page-wrap.image-over { border: 3px solid #3c763c; background-color: #b6ffd8; }
-.page-wrap.err-over { border: 3px solid #a73b3d; background-color: #ffaaa1; }
+h1 {
+  font-family: "Letter Gothic Std", Helvetica, Arial, sans;
+}
+.v-center {
+  padding: 50px 0 0;
+  width: 100%;
+  @include vertical-align();
+}
+
+.page-wrap { 
+  text-align: center;
+  border: 3px solid #fff;
+  &.image-over { 
+    border-color:$brand-success;
+    background: #fffafa;
+  }
+  &.err-over { 
+    border-color:$brand-danger; 
+    background: #ffaaa1;
+  }
+}
 
 .page-wrap .drop-it-msg { display: none; }
-.page-wrap.image-over .click-zone, .page-wrap.image-over .url-zone { display: none; }
-.page-wrap.image-over .drop-it-msg { display: block; }
-
-
-.hero-unit {
-  padding: 30px 15px;
-  text-align: center;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+.page-wrap.image-over {
+  .click-zone, 
+  .url-zone { display: none; }
+  .drop-it-msg { display: block; }
 }
 
-.wrap-zone {
+// Header
+header {
+  padding: 50px 0 0;
   position: relative;
+  .btn-back {
+    position: absolute;
+    left: 0;
+    top: 20px;
+  }
+  &.slim {
+    padding-top: 20px;
+  }
+}
+.btn-back, .btn-info {
+  i {color: $text-color}
+}
+
+// Drop zone
+.wrap-zone {
+  width: 365px;
   margin: 0 auto;
-  width: 300px;
-  height: 200px;
-  padding-top: 50px;
+  .click-zone {
+    padding: 25px 0;
+    cursor: pointer;
+  }
+  [ng-file-select] {}
+  .url-zone {
+    input {
+      text-align: center;
+      text-transform: uppercase;
+      font-size: $font-size-small;
+    }
+  }
+
 }
 
-.wrap-zone .click-zone {
-  cursor: pointer;
-  width: 100%;
-  height: 80%;
-}
-
-.wrap-zone [ng-file-select] {
-  width: 100%;
-  height: 100%;
-}
-
-.wrap-zone .url-zone {
-  width: 100%;
-  height: 20%;
-}
-
-.wrap-zone .url-zone input {
-  width: 100%;
-  height: 100%;
-  text-align: center;
+// Info page
+.info {
+  margin: $line-height-computed 0;
+  p {margin: 0;}
+  img {
+    margin: $line-height-computed/2 0;
+  }
 }
 
 #map {
+  margin: $line-height-computed/2 0;
   height: 420px;
   width: 100%;
-}
-
-footer {
-  margin-top: 100px;
 }
