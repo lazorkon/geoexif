@@ -1,17 +1,15 @@
 <div class="page-wrap" ng-file-drop="onFileSelect($files)" ng-file-drop-available="dropSupported=true" ng-file-drag-over-class="getDragOverClass($event)">
-  <header class="hero-unit" ng-class="{slim: data}">
-    <div class="container">
+  <div class="stick">
+    <header ng-class="{slim: data}">
       <h1>TAGMAZING</h1>
       <button ng-show="data" type="button" class="btn btn-link" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
-      <p ng-hide="data" class="lead">Discover where and how your picture has been make</p>
-    </div>
-  </header>
+      <p ng-hide="data">Discover where and how<br/>your picture has been make</p>
+    </header>
 
-  <div class="container" ng-hide="data || errors || selected">
-    <div class="row">
+    <div class="container" ng-hide="data || errors || selected">
       <div class="wrap-zone" ng-form="form">
 
-        <div class="click-zone text-center" ng-file-select="onFileSelect($files)" accept="image/jpeg">
+        <div class="click-zone" ng-file-select="onFileSelect($files)" accept="image/jpeg">
           <div>TO UPLOAD PICTURE</div>
           <div bindonce="dropSupported">
             <strong bo-if="dropSupported">DRAG OR CLICK HERE</strong>
@@ -28,85 +26,77 @@
           </div>
         </div>
 
-        <div class="drop-it-msg text-center">
+        <div class="drop-it-msg">
           <strong>JUST DROP IT HERE</strong>
         </div>
-
       </div>
     </div>
-  </div>
 
-  <div class="container" ng-show="selected && !errors">
-      <div class="row">
-        <strong>{{selected.name}}</strong>
-        <!-- <button class="button" ng-click="abort($index)" ng-show="upload[$index] && progress[$index] < 100">Abort</button> -->
-        <div class="progress">
-          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%"></div>
-        </div>
+    <div class="container" ng-show="selected && !errors">
+      <strong>{{selected.name}}</strong>
+      <!-- <button class="button" ng-click="abort($index)" ng-show="upload[$index] && progress[$index] < 100">Abort</button> -->
+      <div class="progress">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%"></div>
       </div>
-  </div>
+    </div>
 
-  <div class="container" ng-if="errors">
-    <div class="row">
+    <div class="container" ng-if="errors">
       <p class="text-danger" role="alert">ARE YOU SURE, THAT YOUR FILE IS SUITABLE?</p>
       <p>jpg</p>
       <!-- png, bmp, raw, cr2, crw, pict, xmp, dng -->
       <p>15Mb</p>
       <button type="button" class="btn btn-link" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
     </div>
-  </div>
 
-  <div class="container" ng-if="data && !selected" bindonce>
-    <div class="row">
+    <div class="container" ng-if="data && !selected" bindonce>
       <h3>Picture</h3>
       <p bo-text="data.file.filename"></p>
       <p bo-if="data.resolution">
-        <span bo-text="data.resolution.x"></span>&nbsp;x&nbsp;<span bo-text="data.resolution.y"></span>
+        <span bo-text="data.resolution.x"></span> x <span bo-text="data.resolution.y"></span>
         <span bo-text="data.file.extension | uppercase"></span>
         <span bo-text="data.resolution.megapixels | prefix: '( ' | suffix: ' megapixels )'"></span>
       </p>
-    </div>
 
-    <div class="row">
       <img class="img-thumbnail" bo-src="data.file.thumbUrl" bo-alt="data.file.filename">
+
+      <div bo-if="data.camera">
+        <h3>Camera</h3>
+        <p>
+          <span bo-text="data.camera.make"></span> <span bo-text="data.camera.model"></span>
+        </p>
+        <p bo-if="data.camera.LensModel">
+          <span bo-text="data.camera.LensModel"></span>
+        </p>
+        <p>
+          <span bo-text="data.camera.exposureMode"></span>
+          <span bo-text="data.camera.exposureProgram"></span>
+          <span bo-text="data.camera.exposureTime | suffix: 'sec'"></span>
+          <span bo-text="data.camera.fNumber | prefix: 'f/'"></span>
+          <span bo-if="data.camera.ISO" bo-text="data.camera.ISO | prefix: 'ISO '"></span>
+        </p>
+      </div>
+
+      <div bo-if="data.date">
+        <h3>Date</h3>
+        <p><span bo-text="data.date.original | date:'medium'"></span></p>
+        <p><span bo-text="data.date.originalAgo"></span></p>
+      </div>
+
+      <div bo-if="data.location">
+        <h3>Location</h3>
+        <p ng-if="data.address" ng-bind="data.address"></p>
+        <p bo-if="data.location.dms"><span bo-text="formatDMSCoord(data.location.dms.lat)"></span>, <span bo-text="formatDMSCoord(data.location.dms.lng)"></span></p>
+        <p bo-if="data.location.ddd"><span bo-text="formatDDDCoord(data.location.ddd.lat)"></span>, <span bo-text="formatDDDCoord(data.location.ddd.lng)"></span></p>
+      </div>
+
+      <div bo-if="data.location">      
+        <a ng-href="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" target="_blank" class="btn btn-default">FULL SCREEN MAP</a>
+        <div id="map" google-map="data.location.ddd"></div>
+      </div>
+
     </div>
 
-    <div class="row" bo-if="data.camera">
-      <h3>Camera</h3>
-      <p>
-        <span bo-text="data.camera.make"></span> <span bo-text="data.camera.model"></span>
-      </p>
-      <p bo-if="data.camera.LensModel">
-        <span bo-text="data.camera.LensModel"></span>
-      </p>
-      <p>
-        <span bo-text="data.camera.exposureMode"></span>
-        <span bo-text="data.camera.exposureProgram"></span>
-        <span bo-text="data.camera.exposureTime | suffix: 'sec'"></span>
-        <span bo-text="data.camera.fNumber | prefix: 'f/'"></span>
-        <span bo-if="data.camera.ISO" bo-text="data.camera.ISO | prefix: 'ISO '"></span>
-      </p>
-    </div>
-
-    <div class="row" bo-if="data.date">
-      <h3>Date</h3>
-      <p><span bo-text="data.date.original | date:'medium'"></span></p>
-      <p><span bo-text="data.date.originalAgo"></span></p>
-    </div>
-
-    <div class="row" bo-if="data.location">
-      <h3>Location</h3>
-      <p ng-if="data.address" ng-bind="data.address"></p>
-      <p bo-if="data.location.dms"><span bo-text="formatDMSCoord(data.location.dms.lat)"></span>, <span bo-text="formatDMSCoord(data.location.dms.lng)"></span></p>
-      <p bo-if="data.location.ddd"><span bo-text="formatDDDCoord(data.location.ddd.lat)"></span>, <span bo-text="formatDDDCoord(data.location.ddd.lng)"></span></p>
-    </div>
-
-    <div class="row" bo-if="data.location">      
-      <a ng-href="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" target="_blank" class="btn btn-default">FULL SCREEN MAP</a>
-      <div id="map" google-map="data.location.ddd"></div>
-    </div>
-
-  </div>
+  </div> <!-- Sticky footer  END-->
 
   <footer>
       <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nikita</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>
