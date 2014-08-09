@@ -1,6 +1,5 @@
 test analytics
  - jpeg, tiff, raw image format support
- - increase size limit to 30M
  - nearby images ?
  - copy to clipboard
  - use google map with API key
@@ -10,6 +9,3 @@ test analytics
 
  - input onPaste fix
  - input onEnter
-
-fixme:
- - commas in result page
