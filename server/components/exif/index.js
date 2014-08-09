@@ -7,6 +7,16 @@ var path = require('path');
 var exec = require('child_process').exec;
 var moment = require('moment');
 
+function ExifParseError(message, error) {
+  Error.call(this);
+  this.name = "ExifParseError";
+  this.error = error;
+  this.message = message || 'Can not extract exif data';
+}
+ExifParseError.prototype = new Error();
+ExifParseError.prototype.constructor = ExifParseError;
+
+
 
 // http://phpjs.org/functions/escapeshellarg/
 function escapeshellarg(arg) {
@@ -52,7 +62,7 @@ function extractFloat(text) {
 
 function parseExif(imagePath, callback) {
   exec('exiv2 -qpt ' + escapeshellarg(imagePath), function (err, stdout, stderr) {
-    if (err) return callback(err);
+    if (err) return callback(new ExifParseError(null, err));
 
     var result = {};
     var lines = String(stdout).split('\n'), line;
@@ -72,6 +82,13 @@ function convert (file, info) {
     size: file.size
   };
 
+  if (file.resolution) {
+    data.resolution = {};
+    data.resolution.x = file.resolution.width;
+    data.resolution.y = file.resolution.height;
+    data.resolution.megapixels = +(data.resolution.x * data.resolution.y / 1000000).toFixed(1);
+  }
+
   if (!info) {
     return data;
   }
@@ -81,15 +98,10 @@ function convert (file, info) {
     originalAgo: (tmp = parseDate(info['Exif.Photo.DateTimeOriginal'])) ? tmp.fromNow() : undefined,
   };
 
-  if (file.resolution) {
+  if (!file.resolution && info['Exif.Image.XResolution'] && info['Exif.Image.YResolution']) {
     data.resolution = {};
-    data.resolution.x = file.resolution.width;
-    data.resolution.y = file.resolution.height;
-  } else if (info['Exif.Image.XResolution'] && info['Exif.Image.YResolution']) {
     data.resolution.x = info['Exif.Image.XResolution'];
     data.resolution.y = info['Exif.Image.YResolution'];
-  }
-  if (file.resolution) {
     data.resolution.megapixels = +(data.resolution.x * data.resolution.y / 1000000).toFixed(1);
   }
 
@@ -138,4 +150,5 @@ function convert (file, info) {
 
 exports.parse = parseExif;
 exports.convert = convert;
+exports.ExifParseError = ExifParseError;
 

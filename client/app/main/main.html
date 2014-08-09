@@ -9,7 +9,7 @@
     <div class="container v-center" ng-hide="data || errors || selected">
       <div class="wrap-zone" ng-form="form">
 
-        <div class="click-zone" ng-file-select="onFileSelect($files, 'select')" accept="image/jpeg">
+        <div class="click-zone" ng-file-select="onFileSelect($files, 'select')" accept="image/*" onclick="this.value = null">
           <strong class="small">TO UPLOAD PICTURE</strong>
           <div bindonce="dropSupported">
             <strong bo-if="dropSupported"><a>DRAG OR CLICK HERE</a></strong>
@@ -41,7 +41,7 @@
 
     <div class="container v-center" ng-if="errors">
       <p class="text-danger" role="alert"><strong>ARE YOU SURE, THAT YOUR FILE IS SUITABLE?</strong></p>
-      <p>jpg</p>
+      <p>jpg, tiff, nef</p>
       <!-- png, bmp, raw, cr2, crw, pict, xmp, dng -->
       <p>30Mb</p><br/><br/><br/>
       <pre class="text-danger" ng-if="debug" ng-bind="errors"></pre>
@@ -58,7 +58,7 @@
           <span bo-text="data.file.extension | uppercase"></span>
           <span bo-text="data.resolution.megapixels | prefix: '( ' | suffix: ' megapixels )'"></span>
         </p>
-        <p><img bo-src="data.file.thumbUrl" bo-alt="data.file.filename"></p>
+        <p bo-if="data.file.thumbUrl"><img bo-src="data.file.thumbUrl" bo-alt="data.file.filename"></p>
       </div>
 
       <div class="info" bo-if="data.camera">

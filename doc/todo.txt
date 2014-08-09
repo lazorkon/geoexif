@@ -1,11 +1,8 @@
 test analytics
- - jpeg, tiff, raw image format support
+ - image format support (raw, cr2, crw, pict, xmp, dng)
  - nearby images ?
  - copy to clipboard
  - use google map with API key
 
  - add "graphicsmagick", "exiv2" to package.json
  - configure mail reporting on error
-
- - input onPaste fix
- - input onEnter

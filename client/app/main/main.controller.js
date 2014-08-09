@@ -2,9 +2,9 @@
 
 angular.module('app')
   .controller('MainCtrl', function ($scope, $window, $timeout, $http, $upload, $analytics) {
-    var debug = true;
+    var debug = false;
 
-    $scope.debug = true;
+    $scope.debug = debug;
 
     $scope.reset = function () {
       $scope.disableInput = false;
@@ -101,8 +101,9 @@ angular.module('app')
       $scope.uploadResult = [];
       $scope.selected = file;
       // todo: fix validation
-      if (file.type && file.type !== 'image/jpeg') {
-        $scope.errors = 'Selected file is not JPEG image: "' + file.type + '"';
+      // if (file.type && file.type !== 'image/jpeg') {
+      if (file.type && 0 !== String(file.type).indexOf('image/')) {
+        $scope.errors = 'Selected file is not supported: "' + file.type + '"';
         return;
       }
 
@@ -135,7 +136,8 @@ angular.module('app')
       var hasFile = false;
       if (items != null) {
         for (var i = 0 ; i < items.length; i++) {
-          if (items[i].kind === 'file' && items[i].type === 'image/jpeg') {
+          // if (items[i].kind === 'file' && items[i].type === 'image/jpeg') {
+          if (items[i].kind === 'file' && 0 === String(items[i].type).indexOf('image/')) {
             hasFile = true;
             break;
           }

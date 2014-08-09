@@ -83,6 +83,14 @@ function formatSize(bytes, precision) {
   return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
 }
 
+function validateMime(mime) {
+  // image/jpeg
+  if (mime && String(mime).indexOf('image/') === 0) {
+    return true;
+  }
+  return false;
+}
+
 function MaxSizeExceededError(message, fileSize, maxSize) {
   Error.call(this);
   this.name = "MaxSizeExceededError";
@@ -101,13 +109,14 @@ function FileUnavailableError(message) {
 FileUnavailableError.prototype = new Error();
 FileUnavailableError.prototype.constructor = FileUnavailableError;
 
-function NotJpegError(message, mime) {
+function NotImagError(message, mime) {
   Error.call(this);
-  this.name = "NotJpegError";
-  this.message = message || 'File is not a JPEG image';
+  this.name = "NotImagError";
+  this.mime = mime;
+  this.message = message || 'File is not a supported';
 }
-NotJpegError.prototype = new Error();
-NotJpegError.prototype.constructor = NotJpegError;
+NotImagError.prototype = new Error();
+NotImagError.prototype.constructor = NotImagError;
 
 
 
@@ -134,13 +143,13 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
   var ext = path.extname(imagePath).substring(1) || 'jpg';
   this.clientId = this.getClientId();
   this.imageName = this.clientId + '.' + ext;
-  this.thumbName = this.clientId + '-thumb.' + ext;
+  this.thumbName = this.clientId + '-thumb.jpg';
 
   var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
   magic.detectFile(imagePath, function(err, mime) {
     if (err) return callback(err);
-    if (mime !== 'image/jpeg') {
-      return callback(new NotJpegError(null, mime));
+    if (!validateMime(mime)) {
+      return callback(new NotImagError(null, mime));
     }
 
     fs.stat(imagePath, function (err, stat) {
@@ -152,7 +161,13 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
       async.parallel({
         exif: function (callback) {
           exif.parse(imagePath, function (err, info) {
-            if (err) return callback(err);
+            if (err) {
+              if (err instanceof exif.ExifParseError) {
+                debug && console.log('no exif');
+                return callback(null, null);
+              }
+              return callback(err);
+            }
             debug && console.log('exif: ', info);
             callback(null, info);
           });
@@ -168,18 +183,23 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
                 result.height = value.height;
               }
             })
-            .resize(300)
-            .autoOrient()
+            .thumbnail(300, 300)
+            // .autoOrient()
             .write(config.path.usr + '/' + self.thumbName, function (err) {
-              if (err) return callback(err);
+              if (err) {
+                debug && console.log('can not make thumbnail', err);
+                return callback(null); // suppress error
+              }
+              result = result || {};
+              result.url = '/usr/' + self.thumbName;
               callback(null, result);
             });
         }
       }, function (err, data) {
-        var data;
+        var result;
         if (!err) {
           try {
-            data = self.convertExif({
+            result = self.convertExif({
               filename: self.originalFilename || path.basename(imagePath),
               size: stat.size,
               resolution: data.thumb
@@ -190,16 +210,20 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
         }
 
         if (err) {
-          fs.unlink(imagePath, function (err) { if (err) console.log(err); });
-          fs.unlink(config.path.usr + '/' + self.thumbName, function (err) { if (err) console.log(err); });
+          fs.unlink(imagePath, function () {});
+          fs.unlink(config.path.usr + '/' + self.thumbName, function () {});
           return callback(err);
         }
 
-        fs.unlink(imagePath, function (err) { if (err) console.log(err); });
+        fs.unlink(imagePath, function () {});
 
-        var result = data;
-        result.file.thumbUrl = '/usr/' + self.thumbName;
+        if (data.thumb && data.thumb.url) {
+          result.file.thumbUrl = data.thumb.url;
+        }
+        // result.file.thumbUrl = '/usr/' + self.thumbName;
         // result.file.imageUrl = '/usr/' + self.imageName;
+
+        console.log('---', result, data);
 
         setTimeout((function (tmpImagePath) {
           return function () {
@@ -229,8 +253,8 @@ FileHelper.prototype.validateResponse = function (response, callback) {
   if (response.statusCode !== 200) {
     return callback(new FileUnavailableError());
   }
-  if (response.headers['content-type'] !== 'image/jpeg') {
-    return callback(new NotJpegError(null, response.headers['content-type']));
+  if (!validateMime(response.headers['content-type'])) {
+    return callback(new NotImagError(null, response.headers['content-type']));
   }
   if (response.headers['content-length'] > config.maxFileSize) {
     return callback(new MaxSizeExceededError(null, response.headers['content-length'], config.maxFileSize));
