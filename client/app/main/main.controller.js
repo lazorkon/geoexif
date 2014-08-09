@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('app')
-  .controller('MainCtrl', function ($scope, $window, $timeout, $http, $upload) {
+  .controller('MainCtrl', function ($scope, $window, $timeout, $http, $upload, $analytics) {
     var debug = true;
+
+    $scope.debug = true;
 
     $scope.reset = function () {
       $scope.disableInput = false;
@@ -25,10 +27,36 @@ angular.module('app')
       $scope.disableInput = false;
       $timeout(function() {
         $scope.data = response.data;
+        $scope.data.text = renderExifInfo(response.data);
       });
       if (response.data.location && response.data.location.ddd) {
         geocode(response.data.location.ddd);
       }
+    };
+
+    var renderExifInfo = function (data) {
+      var result = {};
+      var tmp;
+
+      if (data.camera) {
+        result.camera = [];
+
+        tmp = data.camera.make;
+        if (data.camera.model) tmp += (tmp ? ' ' : '') + data.camera.model;
+        if (tmp) result.camera.push(tmp);
+
+        if (data.camera.LensModel) result.camera.push(data.camera.LensModel);
+
+        tmp = '';
+        if (data.camera.exposureMode) tmp += (tmp ? ', ' : '') + data.camera.exposureMode;
+        if (data.camera.exposureProgram) tmp += (tmp ? ', ' : '') + data.camera.exposureProgram;
+        if (data.camera.exposureTime) tmp += (tmp ? ', ' : '') + data.camera.exposureTime;
+        if (data.camera.fNumber) tmp += (tmp ? ', ' : '') + data.camera.fNumber;
+        if (data.camera.ISO) tmp += (tmp ? ', ' : '') + 'ISO ' + data.camera.ISO;
+        if (tmp) result.camera.push(tmp);
+      }
+
+      return result;
     };
 
     // https://developers.google.com/maps/documentation/geocoding/#ReverseGeocoding
@@ -52,7 +80,8 @@ angular.module('app')
       $scope.disableInput = false;
     };
   
-    $scope.onFileSelect = function($files) {
+    $scope.onFileSelect = function($files, mode) {
+      $analytics.eventTrack('drag' === mode ? 'fileDrag' : 'fileSelect', {category: 'main'});
       debug && console.log('onFileSelect', $files);
       var i, c;
       $files.length > 1 && ($files = $files.slice(0, 1));
@@ -72,8 +101,8 @@ angular.module('app')
       $scope.uploadResult = [];
       $scope.selected = file;
       // todo: fix validation
-      if ('image/jpeg' !== file.type) {
-        $scope.errors = 'Selected file is not JPEG image';
+      if (file.type && file.type !== 'image/jpeg') {
+        $scope.errors = 'Selected file is not JPEG image: "' + file.type + '"';
         return;
       }
 
@@ -122,8 +151,11 @@ angular.module('app')
       if ($scope.form.selectedUrl.$invalid || !url) {
         return;
       }
+      $analytics.eventTrack('urlSelect', {category: 'main'});
       debug && console.log('MainCtrl.onUrlSelect', url);
       $scope.disableInput = true;
+      $scope.selected = {name: url};
+      $scope.progress = -1;
       $http.post('/api/file/url', {url: url}).then(onApiDone, onApiFail);
     };
 

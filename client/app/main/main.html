@@ -1,4 +1,4 @@
-<div class="page-wrap" ng-file-drop="onFileSelect($files)" ng-file-drop-available="dropSupported=true" ng-file-drag-over-class="getDragOverClass($event)">
+<div class="page-wrap" ng-file-drop="onFileSelect($files, 'drag')" ng-file-drop-available="dropSupported=true" ng-file-drag-over-class="getDragOverClass($event)">
   <div class="stick">
     <header ng-class="{slim: data}">
       <button ng-show="data" type="button" class="btn btn-link btn-back" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
@@ -9,7 +9,7 @@
     <div class="container v-center" ng-hide="data || errors || selected">
       <div class="wrap-zone" ng-form="form">
 
-        <div class="click-zone" ng-file-select="onFileSelect($files)" accept="image/jpeg">
+        <div class="click-zone" ng-file-select="onFileSelect($files, 'select')" accept="image/jpeg">
           <strong class="small">TO UPLOAD PICTURE</strong>
           <div bindonce="dropSupported">
             <strong bo-if="dropSupported"><a>DRAG OR CLICK HERE</a></strong>
@@ -19,7 +19,7 @@
 
         <div class="url-zone" ng-class="{'has-error': form.selectedUrl.$invalid}">
           <div ng-class="{'input-group': selectedUrl}">
-            <input type="url" name="selectedUrl" class="form-control" placeholder="OR PASTE URL" ng-model="selectedUrl" ng-disabled="disableInput">
+            <input type="url" name="selectedUrl" class="form-control" placeholder="OR PASTE URL" ng-model="selectedUrl" ng-disabled="disableInput" ui-keypress="{13:'onUrlSelect($event)'}">
             <span class="input-group-btn" ng-show="selectedUrl">
               <button class="btn btn-info" type="button" ng-click="onUrlSelect($event)"><i class="icon-upload"></i></button>
             </span>
@@ -43,7 +43,8 @@
       <p class="text-danger" role="alert"><strong>ARE YOU SURE, THAT YOUR FILE IS SUITABLE?</strong></p>
       <p>jpg</p>
       <!-- png, bmp, raw, cr2, crw, pict, xmp, dng -->
-      <p>15Mb</p><br/><br/><br/>
+      <p>30Mb</p><br/><br/><br/>
+      <pre class="text-danger" ng-if="debug" ng-bind="errors"></pre>
       <button type="button" class="btn btn-link btn-back" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
     </div>
 
@@ -62,19 +63,7 @@
 
       <div class="info" bo-if="data.camera">
         <h5>Camera</h5>
-        <p>
-          <span bo-text="data.camera.make"></span> <span bo-text="data.camera.model"></span>
-        </p>
-        <p bo-if="data.camera.LensModel">
-          <span bo-text="data.camera.LensModel"></span>
-        </p>
-        <p>
-          <span bo-text="data.camera.exposureMode"></span>,
-          <span bo-text="data.camera.exposureProgram"></span>,
-          <span bo-text="data.camera.exposureTime | suffix: 'sec'"></span>,
-          <span bo-text="data.camera.fNumber | prefix: 'f/'"></span>,
-          <span bo-if="data.camera.ISO" bo-text="data.camera.ISO | prefix: 'ISO '"></span>
-        </p>
+        <p ng-repeat="text in data.text.camera track by $index" bindonce bo-text="text"></p>
       </div>
 
       <div class="info" bo-if="data.date">

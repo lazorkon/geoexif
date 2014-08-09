@@ -589,7 +589,7 @@ module.exports = function (grunt) {
         'injector:sass', 
         'concurrent:server',
         'injector',
-        'bowerInstall',
+        // 'bowerInstall',
         'autoprefixer',
         'concurrent:debug'
       ]);
@@ -601,7 +601,7 @@ module.exports = function (grunt) {
       'injector:sass', 
       'concurrent:server',
       'injector',
-      'bowerInstall',
+      // 'bowerInstall',
       'autoprefixer',
       'express:dev',
       'wait',
@@ -644,7 +644,7 @@ module.exports = function (grunt) {
         'injector:sass', 
         'concurrent:test',
         'injector',
-        'bowerInstall',
+        // 'bowerInstall',
         'autoprefixer',
         'express:dev',
         'protractor'
@@ -664,7 +664,7 @@ module.exports = function (grunt) {
     'injector:preHtml',
     'injector:postHtml',
     'injector',
-    'bowerInstall',
+    // 'bowerInstall',
     'useminPrepare',
     'autoprefixer',
     'ngtemplates',

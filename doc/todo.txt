@@ -5,9 +5,11 @@ test analytics
  - copy to clipboard
  - use google map with API key
 
- - add "graphicsmagick" to package.json
+ - add "graphicsmagick", "exiv2" to package.json
  - configure mail reporting on error
 
  - input onPaste fix
  - input onEnter
 
+fixme:
+ - commas in result page

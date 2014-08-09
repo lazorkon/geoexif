@@ -11,9 +11,9 @@ var gm = require('gm');
 var mmm = require('mmmagic');
 var async = require('async');
 var moment = require('moment');
-var ExifImage = require('exif').ExifImage;
 // var File = require('./file.model');
 var config = require('../../config/environment');
+var exif = require('../../components/exif');
 
 
 exports.url = function(req, res, next) {
@@ -70,58 +70,6 @@ exports.upload = function(req, res, next) {
  */
 var reUrl = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
 
-
-var exifInfo = {
-  ExposureMode: {
-    '0': 'Auto exposure',
-    '1': 'Manual exposure',
-    '2': 'Auto bracket'  
-  },
-
-  ExposureProgram: {
-    '0': 'Not defined',
-    '1': 'Manual',
-    '2': 'Normal program',
-    '3': 'Aperture priority',
-    '4': 'Shutter priority',
-    '5': 'Creative program',
-    '6': 'Action program',
-    '7': 'Portrait mode',
-    '8': 'Landscape mode'    
-  }
-};
-
-
-
-function getExifLocation(info) {
-  if (!info.gps || !info.gps.GPSLatitude || !info.gps.GPSLongitude) {
-    return null;
-  }
-  var lat = info.gps.GPSLatitude;
-  var lng = info.gps.GPSLongitude;
-  var decimalLat = lat[0] + (lat[1] / 60.0) + (lat[2] / 3600.0);
-  var decimalLng = lng[0] + (lng[1] / 60.0) + (lng[2] / 3600.0);
-
-  if (info.gps.GPSLatitudeRef != 'N') {
-    decimalLat = 0 - decimalLat;
-  }
-  if (info.gps.GPSLongitudeRef != 'E') {
-    decimalLng = 0 - decimalLng;
-  }
-  return { 
-    // Degrees, minutes and seconds
-    dms: {
-      lat: lat.slice().concat(info.gps.GPSLatitudeRef),
-      lng: lng.slice().concat(info.gps.GPSLongitudeRef)
-    },
-
-    // Decimal degrees
-    ddd: {
-      lat: decimalLat, 
-      lng: decimalLng
-    }
-  };
-}
 
 function parseDate(str) {
   return moment(str, ['YYYY:MM:DD HH:mm:ss', 'YYYY-MM-DD HH:mm:ss', moment.ISO_8601]);
@@ -203,7 +151,7 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
 
       async.parallel({
         exif: function (callback) {
-          new ExifImage({ image: imagePath }, function (err, info) {
+          exif.parse(imagePath, function (err, info) {
             if (err) return callback(err);
             debug && console.log('exif: ', info);
             callback(null, info);
@@ -321,54 +269,5 @@ FileHelper.prototype.remoteDownload = function (imageUrl, dest, callback) {
 
 // http://www.awaresystems.be/imaging/tiff/tifftags.html
 FileHelper.prototype.convertExif = function (file, info) {
-  var tmp, data = {};
-  data.file = {
-    filename: file.filename,
-    extension: path.extname(file.filename).substring(1),
-    size: file.size
-  };
-
-  if (!info || !info.exif || !info.exif.ExifVersion) {
-    return data;
-  }
-
-  if (info.exif) {
-    data.date = {
-      original: (tmp = parseDate(info.exif.DateTimeOriginal)) ? tmp.toISOString() : undefined,
-      created: (tmp = parseDate(info.exif.CreateDate)) ? tmp.toISOString() : undefined,
-      originalAgo: (tmp = parseDate(info.exif.DateTimeOriginal)) ? tmp.fromNow() : undefined,
-      createdAgo: (tmp = parseDate(info.exif.CreateDate)) ? tmp.fromNow() : undefined
-    };
-  }
-
-  if (info.image) {
-    data.resolution = {};
-    if (file.resolution) {
-      data.resolution.x = file.resolution.width;
-      data.resolution.y = file.resolution.height;
-    } else {
-      data.resolution.x = info.image.XResolution;
-      data.resolution.y = info.image.YResolution;
-    }
-    data.resolution.megapixels = (data.resolution.x * data.resolution.y / 1000000).toFixed(1);
-    if (data.resolution.megapixels === '0.0') data.resolution.megapixels = 0;
-  }
-
-  if (info.exif) {
-    data.camera = {
-      focalLength: info.exif.FocalLength,
-      exposureMode: exifInfo.ExposureMode[info.exif.ExposureMode],
-      exposureProgram: exifInfo.ExposureProgram[info.exif.ExposureProgram],
-      exposureTime: info.exif.ExposureTime < 1 ? '1/' + Math.floor(1 / info.exif.ExposureTime) : info.exif.ExposureTime,
-      fNumber: info.exif.FNumber,
-      ISO: info.exif.ISO,
-      make: info.image.Make,
-      model: info.image.Model,
-      LensModel: info.exif.LensModel
-    };
-  }
-  
-  data.location = getExifLocation(info);
-
-  return data;
+  return exif.convert(file, info);
 };
