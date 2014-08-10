@@ -1,6 +1,9 @@
 'use strict';
 
 module.exports = function (grunt) {
+  var fs = require('fs');
+  var path = require('path');
+
   var localConfig;
   try {
     localConfig = require('./server/config/local.env');
@@ -281,15 +284,24 @@ module.exports = function (grunt) {
       }
     },
 
-    // Allow the use of non-minsafe AngularJS files. Automatically makes it
-    // minsafe compatible so Uglify does not destroy the ng references
+    // // Allow the use of non-minsafe AngularJS files. Automatically makes it
+    // // minsafe compatible so Uglify does not destroy the ng references
+    // ngAnnotate: {
+    //   dist: {
+    //     files: [{
+    //       expand: true,
+    //       cwd: '.tmp/concat',
+    //       src: '*/**.js',
+    //       dest: '.tmp/concat'
+    //     }]
+    //   }
+    // },
+
     ngAnnotate: {
       dist: {
         files: [{
-          expand: true,
-          cwd: '.tmp/concat',
-          src: '*/**.js',
-          dest: '.tmp/concat'
+          src: '.tmp/concat/app/app.js',
+          dest: '.tmp/concat/app/app.js'
         }]
       }
     },
@@ -298,7 +310,7 @@ module.exports = function (grunt) {
     ngtemplates: {
       options: {
         // This should be the name of your apps angular module
-        module: 'geoExifApp',
+        module: 'app',
         htmlmin: {
           collapseBooleanAttributes: true,
           collapseWhitespace: true,
@@ -340,6 +352,7 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             '.htaccess',
+            'usr',
             'bower_components/**/*',
             'assets/images/{,*/}*.{webp}',
             'assets/fonts/**/*',
@@ -354,6 +367,7 @@ module.exports = function (grunt) {
           expand: true,
           dest: '<%= yeoman.dist %>',
           src: [
+            'tmp',
             'package.json',
             'server/**/*'
           ]
@@ -438,8 +452,8 @@ module.exports = function (grunt) {
             '<%= yeoman.client %>/app',
             '<%= yeoman.client %>/components'
           ],
-          compass: false,
-          sourcemap: true
+          compass: false
+          // sourcemap: true
         },
         files: {
           '.tmp/app/app.css' : '<%= yeoman.client %>/app/app.scss'
@@ -507,6 +521,42 @@ module.exports = function (grunt) {
             '<%= yeoman.client %>/{app,components}/**/*.css'
           ]
         }
+      },
+
+      preHtml: {
+        options: {
+          starttag: '<!-- injector:pre-html -->',
+          endtag: '<!-- endinjector -->',
+          transform: function (filepath) { return fs.readFileSync(path.join(__dirname, filepath)); }
+        },
+        files: { '<%= yeoman.client %>/index.html': ['<%= yeoman.client %>/target-html/pre-all*.html'] }
+      },
+
+      postHtml: {
+        options: {
+          starttag: '<!-- injector:post-html -->',
+          endtag: '<!-- endinjector -->',
+          transform: function (filepath) { return fs.readFileSync(path.join(__dirname, filepath)); }
+        },
+        files: { '<%= yeoman.client %>/index.html': ['<%= yeoman.client %>/target-html/post-all*.html'] }
+      },
+
+      preHtmlDist: {
+        options: {
+          starttag: '<!-- injector:pre-html -->',
+          endtag: '<!-- endinjector -->',
+          transform: function (filepath) { return fs.readFileSync(path.join(__dirname, filepath)); }
+        },
+        files: { '<%= yeoman.dist %>/public/index.html': ['<%= yeoman.client %>/target-html/pre-dist*.html'] }
+      },
+
+      postHtmlDist: {
+        options: {
+          starttag: '<!-- injector:post-html -->',
+          endtag: '<!-- endinjector -->',
+          transform: function (filepath) { return fs.readFileSync(path.join(__dirname, filepath)); }
+        },
+        files: { '<%= yeoman.dist %>/public/index.html': ['<%= yeoman.client %>/target-html/post-dist*.html'] }
       }
     },
   });
@@ -539,7 +589,7 @@ module.exports = function (grunt) {
         'injector:sass', 
         'concurrent:server',
         'injector',
-        'bowerInstall',
+        // 'bowerInstall',
         'autoprefixer',
         'concurrent:debug'
       ]);
@@ -551,7 +601,7 @@ module.exports = function (grunt) {
       'injector:sass', 
       'concurrent:server',
       'injector',
-      'bowerInstall',
+      // 'bowerInstall',
       'autoprefixer',
       'express:dev',
       'wait',
@@ -594,7 +644,7 @@ module.exports = function (grunt) {
         'injector:sass', 
         'concurrent:test',
         'injector',
-        'bowerInstall',
+        // 'bowerInstall',
         'autoprefixer',
         'express:dev',
         'protractor'
@@ -611,15 +661,19 @@ module.exports = function (grunt) {
     'clean:dist',
     'injector:sass', 
     'concurrent:dist',
+    'injector:preHtml',
+    'injector:postHtml',
     'injector',
-    'bowerInstall',
+    // 'bowerInstall',
     'useminPrepare',
     'autoprefixer',
     'ngtemplates',
     'concat',
     'ngAnnotate',
     'copy:dist',
-    'cdnify',
+    'injector:preHtmlDist',
+    'injector:postHtmlDist',
+    // 'cdnify',
     'cssmin',
     'uglify',
     'rev',

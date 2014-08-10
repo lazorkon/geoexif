@@ -27,7 +27,7 @@ var all = {
     usr: root + '/client/usr'
   },
 
-  maxFileSize: 15 * 1024 * 1024,
+  maxFileSize: 30 * 1024 * 1024,
 
   // Server port
   port: process.env.PORT || 9000,

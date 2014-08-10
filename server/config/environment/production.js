@@ -2,6 +2,7 @@
 
 // Production specific configuration
 // =================================
+var path = require('path');
 var root = path.normalize(__dirname + '/../../..');
 module.exports = {
   // Server IP

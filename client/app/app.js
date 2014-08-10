@@ -2,12 +2,14 @@
 
 angular.module('app', [
   'ngCookies',
-  'ngResource',
   'ngAnimate',
   'ngSanitize',
   'ui.router',
+  'ui.keypress',
   'pasvaz.bindonce',
-  'angularFileUpload'
+  'angularFileUpload',
+  'angulartics', 
+  'angulartics.google.analytics'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

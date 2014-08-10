@@ -29,22 +29,11 @@
     <!-- Add your site or application content here -->
     <div ui-view></div>
 
-     <script>
-      /*
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <!-- injector:pre-html -->
+    
 
-      // live
-      ga('create', 'UA-53620404-1', 'auto');
-      
-      // sandbox
-      ga('create', 'UA-53615237-1', 'auto');
-      
-      // ga('send', 'pageview');
-      */
-    </script>
+    <!-- endinjector -->
+
 
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
@@ -54,8 +43,8 @@
     <!-- build:js(client) app/vendor.js -->
       <script src="bower_components/ng-file-upload/angular-file-upload-html5-shim.js"></script>
       <!-- bower:js -->
+      <!-- endbower -->
       <script src="bower_components/angular/angular.js"></script>
-      <script src="bower_components/angular-resource/angular-resource.js"></script>
       <script src="bower_components/angular-cookies/angular-cookies.js"></script>
       <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
       <script src="bower_components/angular-animate/angular-animate.js"></script>
@@ -63,7 +52,9 @@
       <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
       <script src="bower_components/ng-file-upload/angular-file-upload.js"></script>
       <script src="bower_components/angular-bindonce/bindonce.js"></script>
-      <!-- endbower -->
+      <script src="bower_components/angulartics/src/angulartics.js"></script>
+      <script src="bower_components/angulartics/src/angulartics-ga.js"></script>
+      <script src="bower_components/angular-ui-utils/keypress.js"></script>
     <!-- endbuild -->
 
     <!-- build:js({.tmp,client}) app/app.js -->
@@ -79,20 +70,10 @@
       <!-- endinjector -->
     <!-- endbuild -->
 
-    <script src="//maps.googleapis.com/maps/api/js?v=3&sensor=false&language=en"></script>
+    <!-- injector:post-html -->
+    
 
-    <script>
-      /*
-      UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/RXA0ONY1554Md5EeTtCnA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
-      UserVoice.push(['set', {
-        accent_color: '#808283',
-        trigger_color: 'white',
-        trigger_background_color: 'rgba(46, 49, 51, 0.6)'
-      }]);
-      UserVoice.push(['addTrigger', '#uservoice-trigger', { mode: 'contact' }]);
-      UserVoice.push(['autoprompt', {}]);
-      */
-    </script>
+    <!-- endinjector -->
 
 </body>
 </html>

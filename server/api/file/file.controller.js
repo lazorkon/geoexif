@@ -11,9 +11,9 @@ var gm = require('gm');
 var mmm = require('mmmagic');
 var async = require('async');
 var moment = require('moment');
-var ExifImage = require('exif').ExifImage;
 // var File = require('./file.model');
 var config = require('../../config/environment');
+var exif = require('../../components/exif');
 
 
 exports.url = function(req, res, next) {
@@ -71,58 +71,6 @@ exports.upload = function(req, res, next) {
 var reUrl = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
 
 
-var exifInfo = {
-  ExposureMode: {
-    '0': 'Auto exposure',
-    '1': 'Manual exposure',
-    '2': 'Auto bracket'  
-  },
-
-  ExposureProgram: {
-    '0': 'Not defined',
-    '1': 'Manual',
-    '2': 'Normal program',
-    '3': 'Aperture priority',
-    '4': 'Shutter priority',
-    '5': 'Creative program',
-    '6': 'Action program',
-    '7': 'Portrait mode',
-    '8': 'Landscape mode'    
-  }
-};
-
-
-
-function getExifLocation(info) {
-  if (!info.gps || !info.gps.GPSLatitude || !info.gps.GPSLongitude) {
-    return null;
-  }
-  var lat = info.gps.GPSLatitude;
-  var lng = info.gps.GPSLongitude;
-  var decimalLat = lat[0] + (lat[1] / 60.0) + (lat[2] / 3600.0);
-  var decimalLng = lng[0] + (lng[1] / 60.0) + (lng[2] / 3600.0);
-
-  if (info.gps.GPSLatitudeRef != 'N') {
-    decimalLat = 0 - decimalLat;
-  }
-  if (info.gps.GPSLongitudeRef != 'E') {
-    decimalLng = 0 - decimalLng;
-  }
-  return { 
-    // Degrees, minutes and seconds
-    dms: {
-      lat: lat.slice().concat(info.gps.GPSLatitudeRef),
-      lng: lng.slice().concat(info.gps.GPSLongitudeRef)
-    },
-
-    // Decimal degrees
-    ddd: {
-      lat: decimalLat, 
-      lng: decimalLng
-    }
-  };
-}
-
 function parseDate(str) {
   return moment(str, ['YYYY:MM:DD HH:mm:ss', 'YYYY-MM-DD HH:mm:ss', moment.ISO_8601]);
 }
@@ -133,6 +81,14 @@ function formatSize(bytes, precision) {
   var units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'],
     number = Math.floor(Math.log(bytes) / Math.log(1024));
   return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
+}
+
+function validateMime(mime) {
+  // image/jpeg
+  if (mime && String(mime).indexOf('image/') === 0) {
+    return true;
+  }
+  return false;
 }
 
 function MaxSizeExceededError(message, fileSize, maxSize) {
@@ -153,13 +109,14 @@ function FileUnavailableError(message) {
 FileUnavailableError.prototype = new Error();
 FileUnavailableError.prototype.constructor = FileUnavailableError;
 
-function NotJpegError(message, mime) {
+function NotImagError(message, mime) {
   Error.call(this);
-  this.name = "NotJpegError";
-  this.message = message || 'File is not a JPEG image';
+  this.name = "NotImagError";
+  this.mime = mime;
+  this.message = message || 'File is not a supported';
 }
-NotJpegError.prototype = new Error();
-NotJpegError.prototype.constructor = NotJpegError;
+NotImagError.prototype = new Error();
+NotImagError.prototype.constructor = NotImagError;
 
 
 
@@ -186,13 +143,13 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
   var ext = path.extname(imagePath).substring(1) || 'jpg';
   this.clientId = this.getClientId();
   this.imageName = this.clientId + '.' + ext;
-  this.thumbName = this.clientId + '-thumb.' + ext;
+  this.thumbName = this.clientId + '-thumb.jpg';
 
   var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
   magic.detectFile(imagePath, function(err, mime) {
     if (err) return callback(err);
-    if (mime !== 'image/jpeg') {
-      return callback(new NotJpegError(null, mime));
+    if (!validateMime(mime)) {
+      return callback(new NotImagError(null, mime));
     }
 
     fs.stat(imagePath, function (err, stat) {
@@ -203,8 +160,14 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
 
       async.parallel({
         exif: function (callback) {
-          new ExifImage({ image: imagePath }, function (err, info) {
-            if (err) return callback(err);
+          exif.parse(imagePath, function (err, info) {
+            if (err) {
+              if (err instanceof exif.ExifParseError) {
+                debug && console.log('no exif');
+                return callback(null, null);
+              }
+              return callback(err);
+            }
             debug && console.log('exif: ', info);
             callback(null, info);
           });
@@ -220,18 +183,23 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
                 result.height = value.height;
               }
             })
-            .resize(300)
-            .autoOrient()
+            .thumbnail(300, 300)
+            // .autoOrient()
             .write(config.path.usr + '/' + self.thumbName, function (err) {
-              if (err) return callback(err);
+              if (err) {
+                debug && console.log('can not make thumbnail', err);
+                return callback(null); // suppress error
+              }
+              result = result || {};
+              result.url = '/usr/' + self.thumbName;
               callback(null, result);
             });
         }
       }, function (err, data) {
-        var data;
+        var result;
         if (!err) {
           try {
-            data = self.convertExif({
+            result = self.convertExif({
               filename: self.originalFilename || path.basename(imagePath),
               size: stat.size,
               resolution: data.thumb
@@ -242,16 +210,20 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
         }
 
         if (err) {
-          fs.unlink(imagePath, function (err) { if (err) console.log(err); });
-          fs.unlink(config.path.usr + '/' + self.thumbName, function (err) { if (err) console.log(err); });
+          fs.unlink(imagePath, function () {});
+          fs.unlink(config.path.usr + '/' + self.thumbName, function () {});
           return callback(err);
         }
 
-        fs.unlink(imagePath, function (err) { if (err) console.log(err); });
+        fs.unlink(imagePath, function () {});
 
-        var result = data;
-        result.file.thumbUrl = '/usr/' + self.thumbName;
+        if (data.thumb && data.thumb.url) {
+          result.file.thumbUrl = data.thumb.url;
+        }
+        // result.file.thumbUrl = '/usr/' + self.thumbName;
         // result.file.imageUrl = '/usr/' + self.imageName;
+
+        console.log('---', result, data);
 
         setTimeout((function (tmpImagePath) {
           return function () {
@@ -281,8 +253,8 @@ FileHelper.prototype.validateResponse = function (response, callback) {
   if (response.statusCode !== 200) {
     return callback(new FileUnavailableError());
   }
-  if (response.headers['content-type'] !== 'image/jpeg') {
-    return callback(new NotJpegError(null, response.headers['content-type']));
+  if (!validateMime(response.headers['content-type'])) {
+    return callback(new NotImagError(null, response.headers['content-type']));
   }
   if (response.headers['content-length'] > config.maxFileSize) {
     return callback(new MaxSizeExceededError(null, response.headers['content-length'], config.maxFileSize));
@@ -321,54 +293,5 @@ FileHelper.prototype.remoteDownload = function (imageUrl, dest, callback) {
 
 // http://www.awaresystems.be/imaging/tiff/tifftags.html
 FileHelper.prototype.convertExif = function (file, info) {
-  var tmp, data = {};
-  data.file = {
-    filename: file.filename,
-    extension: path.extname(file.filename).substring(1),
-    size: file.size
-  };
-
-  if (!info || !info.exif || !info.exif.ExifVersion) {
-    return data;
-  }
-
-  if (info.exif) {
-    data.date = {
-      original: (tmp = parseDate(info.exif.DateTimeOriginal)) ? tmp.toISOString() : undefined,
-      created: (tmp = parseDate(info.exif.CreateDate)) ? tmp.toISOString() : undefined,
-      originalAgo: (tmp = parseDate(info.exif.DateTimeOriginal)) ? tmp.fromNow() : undefined,
-      createdAgo: (tmp = parseDate(info.exif.CreateDate)) ? tmp.fromNow() : undefined
-    };
-  }
-
-  if (info.image) {
-    data.resolution = {};
-    if (file.resolution) {
-      data.resolution.x = file.resolution.width;
-      data.resolution.y = file.resolution.height;
-    } else {
-      data.resolution.x = info.image.XResolution;
-      data.resolution.y = info.image.YResolution;
-    }
-    data.resolution.megapixels = (data.resolution.x * data.resolution.y / 1000000).toFixed(1);
-    if (data.resolution.megapixels === '0.0') data.resolution.megapixels = 0;
-  }
-
-  if (info.exif) {
-    data.camera = {
-      focalLength: info.exif.FocalLength,
-      exposureMode: exifInfo.ExposureMode[info.exif.ExposureMode],
-      exposureProgram: exifInfo.ExposureProgram[info.exif.ExposureProgram],
-      exposureTime: info.exif.ExposureTime < 1 ? '1/' + Math.floor(1 / info.exif.ExposureTime) : info.exif.ExposureTime,
-      fNumber: info.exif.FNumber,
-      ISO: info.exif.ISO,
-      make: info.image.Make,
-      model: info.image.Model,
-      LensModel: info.exif.LensModel
-    };
-  }
-  
-  data.location = getExifLocation(info);
-
-  return data;
+  return exif.convert(file, info);
 };
