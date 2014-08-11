@@ -6,7 +6,7 @@
       <p ng-hide="data">Discover where and how<br/>your picture has been make</p>
     </header>
 
-    <div class="container v-center" ng-hide="data || errors || selected">
+    <div class="container v-center ani-sh" ng-hide="data || errors || selected">
       <div class="wrap-zone" ng-form="form">
 
         <div class="click-zone" ng-file-select="onFileSelect($files, 'select')" accept="image/*" onclick="this.value = null">
@@ -32,14 +32,14 @@
       </div>
     </div>
 
-    <div class="container v-center" ng-show="selected && !errors">
+    <div class="container v-center ani-sh" ng-show="selected && !errors">
       <p ng-bind="selected.name"></p>
       <div class="progress">
         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%"></div>
       </div>
     </div>
 
-    <div class="container v-center" ng-if="errors">
+    <div class="container v-center ani-el" ng-if="errors">
       <p class="text-danger" role="alert"><strong>ARE YOU SURE, THAT YOUR FILE IS SUITABLE?</strong></p>
       <p>jpg, tiff, nef</p>
       <!-- png, bmp, raw, cr2, crw, pict, xmp, dng -->
@@ -48,7 +48,7 @@
       <button type="button" class="btn btn-link btn-back" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
     </div>
 
-    <div class="container" ng-if="data && !selected" bindonce>
+    <div class="container ani-el" ng-if="data && !selected" bindonce>
       <!-- Picture info -->
       <div class="info">
         <h5>Picture</h5>
