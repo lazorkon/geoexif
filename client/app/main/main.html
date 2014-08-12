@@ -81,7 +81,8 @@
 
       <div class="info" bo-if="data.location">
         <p><a ng-href="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" target="_blank" class="btn btn-default">FULL SCREEN MAP</a></p>
-        <div id="map" google-map="data.location.ddd"></div>
+        <div id="map" google-map="data.location.ddd" google-map-rect="data.rect"></div>
+        <div panoramio-list="data.rect"></div>
       </div>
     </div>
 

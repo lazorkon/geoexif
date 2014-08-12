@@ -27,15 +27,15 @@ angular.module('app')
       head.appendChild(script);
     }
 
-
     return {
       scope: {
-        location: '=googleMap'
+        location: '=googleMap',
+        rect: '=googleMapRect',
       },
       restrict: 'A',
       template: '<div></div>',
       link: function ($scope, element, attr) {
-          var map, marker, apiLoaded;
+          var map, marker;
 
           function createMap() {
             map = new google.maps.Map(element[0], {
@@ -47,14 +47,38 @@ angular.module('app')
               map: map,
               position: new google.maps.LatLng($scope.location.lat, $scope.location.lng)
             });
+
+            var timerId;
+            google.maps.event.addListener(map, 'bounds_changed', function(e) {
+              if ($scope.rect) {
+                if (timerId) clearTimeout(timerId);
+                timerId = window.setTimeout(function() { timerId = null; updateRect(map); }, 1000);
+              } else {
+                updateRect(map);
+              }
+            });
+          }
+
+          function updateRect(map) {
+            var bounds = map.getBounds();
+            var ne, sw;
+            if (bounds.isEmpty()) return;
+            ne = bounds.getNorthEast();
+            sw = bounds.getSouthWest();
+            $scope.$apply(function () {
+              $scope.rect = {
+                ne: { lat: ne.lat(), lng: ne.lng() },
+                sw: { lat: sw.lat(), lng: sw.lng() }
+              };
+            });
           }
 
           if ($scope.location) {
-            if (apiLoaded) {
+            if ($window.google && $window.google.maps) {
               createMap();
             } else {
               $window.tmpOnMapLoad = createMap;
-              loadScript(apiUrl, function () { apiLoaded = true; });
+              loadScript(apiUrl, function () {});
             }
           }
       }
