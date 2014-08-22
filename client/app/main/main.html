@@ -91,11 +91,11 @@
         <p><a ng-href="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" target="_blank" class="btn btn-default">FULL SCREEN MAP</a></p>
         <div id="map" google-map="data.location.ddd"></div>
       </div>
+      <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nikita</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>
     </div>
-
   </div> <!-- Sticky footer  END-->
 
 </div>
-<footer>
+<footer ng-hide="data && !selected">
     <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nikita</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>
 </footer>

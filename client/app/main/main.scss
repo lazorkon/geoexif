@@ -17,6 +17,8 @@ html, body, [ui-view], .page-wrap {
 }
 footer, .page-wrap:after {
   /* .push must be the same height as footer */
+  position: relative;
+  z-index: 30;
   text-align: center;
   height: 36px; 
 }
