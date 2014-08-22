@@ -5,18 +5,19 @@
 html, body, [ui-view], .page-wrap {
   height: 100%;
 }
-.stick {
+.page-wrap {
   min-height: 100%;
   /* equal to footer height */
   margin-bottom: -36px; 
   @include fix-3d();
 }
-.stick:after {
+.page-wrap:after {
   content: "";
   display: block;
 }
-footer, .stick:after {
+footer, .page-wrap:after {
   /* .push must be the same height as footer */
+  text-align: center;
   height: 36px; 
 }
 footer p {
@@ -28,13 +29,15 @@ h1 {
 }
 .v-center {
   padding: 50px 0 0;
-  width: 100%;
   @include vertical-align();
 }
-
+.container > .info:first-child {
+  padding-top: 50px;
+}
 .page-wrap { 
   text-align: center;
   border: 3px solid #fff;
+  @include transition(0.3s ease-in-out all);
   &.image-over { 
     border-color:$brand-success;
     background: #fffafa;
@@ -56,6 +59,7 @@ h1 {
 header {
   padding: 50px 0 0;
   position: relative;
+  z-index: 20;
   .btn-back {
     position: absolute;
     left: 0;

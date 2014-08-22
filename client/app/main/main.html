@@ -5,9 +5,10 @@
       <h1>TAGMAZING</h1>
       <p ng-hide="data">Discover where and how<br/>your picture has been make</p>
     </header>
-
-    <div class="container v-center ani-sh" ng-hide="data || errors || selected">
-      <div class="wrap-zone" ng-form="form">
+    
+    <!-- Start Screen -->
+    <div class="container ani-sh" ng-hide="data || errors || selected">
+      <div class="wrap-zone v-center" ng-form="form">
 
         <div class="click-zone" ng-file-select="onFileSelect($files, 'select')" accept="image/*" onclick="this.value = null">
           <strong class="small">TO UPLOAD PICTURE</strong>
@@ -32,22 +33,29 @@
       </div>
     </div>
 
-    <div class="container v-center ani-sh" ng-show="selected && !errors">
-      <p ng-bind="selected.name"></p>
-      <div class="progress">
-        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%"></div>
+    <!-- Progress Bar -->
+    <div class="container ani-sh" ng-show="selected && !errors">
+      <div class="v-center">
+        <p ng-bind="selected.name"></p>
+        <div class="progress">
+          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%"></div>
+        </div>
       </div>
     </div>
 
-    <div class="container v-center ani-el" ng-if="errors">
-      <p class="text-danger" role="alert"><strong>ARE YOU SURE, THAT YOUR FILE IS SUITABLE?</strong></p>
-      <p>jpg, tiff, nef</p>
-      <!-- png, bmp, raw, cr2, crw, pict, xmp, dng -->
-      <p>30Mb</p><br/><br/><br/>
-      <pre class="text-danger" ng-if="debug" ng-bind="errors"></pre>
-      <button type="button" class="btn btn-link btn-back" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
+    <!-- Error Screen -->
+    <div class="container ani-el" ng-if="errors">
+      <div class="v-center">
+        <p class="text-danger" role="alert"><strong>ARE YOU SURE, THAT YOUR FILE IS SUITABLE?</strong></p>
+        <p>jpg, tiff, nef</p>
+        <!-- png, bmp, raw, cr2, crw, pict, xmp, dng -->
+        <p>30Mb</p><br/><br/><br/>
+        <pre class="text-danger" ng-if="debug" ng-bind="errors"></pre>
+        <button type="button" class="btn btn-link btn-back" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
+      </div>
     </div>
 
+    <!-- Report Block -->
     <div class="container ani-el" ng-if="data && !selected" bindonce>
       <!-- Picture info -->
       <div class="info">
@@ -87,7 +95,7 @@
 
   </div> <!-- Sticky footer  END-->
 
-  <footer>
-      <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nikita</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>
-  </footer>
 </div>
+<footer>
+    <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nikita</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>
+</footer>

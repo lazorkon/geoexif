@@ -180,6 +180,12 @@
       -ms-transform-origin: $origin; // IE9 only
           transform-origin: $origin;
 }
+@mixin transform-style($style) {
+  -webkit-transform-origin: $style;
+     -moz-transform-origin: $style;
+      -ms-transform-origin: $style; // IE9 only
+          transform-origin: $style;
+}
 
 
 // Transitions
