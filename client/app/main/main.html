@@ -10,7 +10,7 @@
     <div class="container ani-sh" ng-hide="data || errors || selected">
       <div class="wrap-zone v-center" ng-form="form">
 
-        <div class="click-zone" ng-file-select="onFileSelect($files, 'select')" accept="image/*" onclick="this.value = null">
+        <div class="click-zone" ng-file-select="onFileSelect($files, 'select')" onclick="this.value = null">
           <strong class="small">TO UPLOAD PICTURE</strong>
           <div bindonce="dropSupported">
             <strong bo-if="dropSupported"><a>DRAG OR CLICK HERE</a></strong>
@@ -47,8 +47,8 @@
     <div class="container ani-el" ng-if="errors">
       <div class="v-center">
         <p class="text-danger" role="alert"><strong>ARE YOU SURE, THAT YOUR FILE IS SUITABLE?</strong></p>
-        <p>jpg, tiff, nef</p>
-        <!-- png, bmp, raw, cr2, crw, pict, xmp, dng -->
+        <p>jpg, tiff, arw, cr2, dng, nef, orf, raf, rw2</p>
+        <!-- png, bmp, raw, crw, pict, xmp, dng -->
         <p>30Mb</p><br/><br/><br/>
         <pre class="text-danger" ng-if="debug" ng-bind="errors"></pre>
         <button type="button" class="btn btn-link btn-back" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
@@ -91,11 +91,11 @@
         <p><a ng-href="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" target="_blank" class="btn btn-default">FULL SCREEN MAP</a></p>
         <div id="map" google-map="data.location.ddd"></div>
       </div>
-      <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nikita</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>
+      <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nazar</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>
     </div>
   </div> <!-- Sticky footer  END-->
 
 </div>
 <footer ng-hide="data && !selected">
-    <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nikita</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>
+    <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nazar</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>
 </footer>

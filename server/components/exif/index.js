@@ -98,10 +98,10 @@ function convert (file, info) {
     originalAgo: (tmp = parseDate(info['Exif.Photo.DateTimeOriginal'])) ? tmp.fromNow() : undefined,
   };
 
-  if (!file.resolution && info['Exif.Image.XResolution'] && info['Exif.Image.YResolution']) {
+  if (!file.resolution && info['Exif.Photo.PixelXDimension'] && info['Exif.Photo.PixelYDimension']) {
     data.resolution = {};
-    data.resolution.x = info['Exif.Image.XResolution'];
-    data.resolution.y = info['Exif.Image.YResolution'];
+    data.resolution.x = info['Exif.Photo.PixelXDimension'];
+    data.resolution.y = info['Exif.Photo.PixelYDimension'];
     data.resolution.megapixels = +(data.resolution.x * data.resolution.y / 1000000).toFixed(1);
   }
 

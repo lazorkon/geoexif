@@ -4,7 +4,9 @@ var debug = ('development' === process.env.NODE_ENV);
 
 var _ = require('lodash');
 var fs = require('fs');
+var util = require('util');
 var http = require('http');
+var https = require('https');
 var path = require('path');
 var url = require('url');
 var gm = require('gm');
@@ -83,41 +85,47 @@ function formatSize(bytes, precision) {
   return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
 }
 
-function validateMime(mime) {
+function validateMime(mime, filename) {
   // image/jpeg
-  if (mime && String(mime).indexOf('image/') === 0) {
-    return true;
+  if (mime) {
+    if (String(mime).indexOf('image/') === 0) {
+      return true;
+    }
+
+    // gag: libmagic return "application/octet-stream" for some images like "raf", "rw2"
+    var ext;
+    if ('application/octet-stream' === mime && path && (ext = path.extname(filename)) && ('.raf' === ext || '.rw2' === ext)) {
+      return true;
+    }
   }
   return false;
 }
 
 function MaxSizeExceededError(message, fileSize, maxSize) {
   Error.call(this);
+  Error.captureStackTrace(this, this.constructor);
   this.name = "MaxSizeExceededError";
   this.message = message || 'File size'
     + (fileSize ? ' ' + formatSize(maxSize) : '')
     + ' exceeded allowed ' + (maxSize ? formatSize(maxSize) : 'limit');
 }
-MaxSizeExceededError.prototype = new Error();
-MaxSizeExceededError.prototype.constructor = MaxSizeExceededError;
+util.inherits(MaxSizeExceededError, Error);
 
 function FileUnavailableError(message) {
   Error.call(this);
+  Error.captureStackTrace(this, this.constructor);
   this.name = "FileUnavailableError";
   this.message = message || 'File is not available';
 }
-FileUnavailableError.prototype = new Error();
-FileUnavailableError.prototype.constructor = FileUnavailableError;
-
-function NotImagError(message, mime) {
+util.inherits(FileUnavailableError, Error);
+function NotImageError(message, mime) {
   Error.call(this);
-  this.name = "NotImagError";
+  Error.captureStackTrace(this, this.constructor);
+  this.name = "NotImageError";
   this.mime = mime;
-  this.message = message || 'File is not a supported';
+  this.message = message || 'File is not a supported' + (mime ? '"' + mime + '"' : '');
 }
-NotImagError.prototype = new Error();
-NotImagError.prototype.constructor = NotImagError;
-
+util.inherits(NotImageError, Error);
 
 
 function FileHelper() {}
@@ -148,8 +156,8 @@ FileHelper.prototype.processLocal = function (imagePath, callback) {
   var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
   magic.detectFile(imagePath, function(err, mime) {
     if (err) return callback(err);
-    if (!validateMime(mime)) {
-      return callback(new NotImagError(null, mime));
+    if (!validateMime(mime, imagePath)) {
+      return callback(new NotImageError(null, mime));
     }
 
     fs.stat(imagePath, function (err, stat) {
@@ -254,7 +262,7 @@ FileHelper.prototype.validateResponse = function (response, callback) {
     return callback(new FileUnavailableError());
   }
   if (!validateMime(response.headers['content-type'])) {
-    return callback(new NotImagError(null, response.headers['content-type']));
+    return callback(new NotImageError(null, response.headers['content-type']));
   }
   if (response.headers['content-length'] > config.maxFileSize) {
     return callback(new MaxSizeExceededError(null, response.headers['content-length'], config.maxFileSize));
@@ -267,7 +275,8 @@ FileHelper.prototype.remoteValidate = function (imageUrl, callback) {
   var options = url.parse(imageUrl);
   options.method = 'HEAD';
   var self = this;
-  var request = http.request(options, function (response) {
+  var obj = ('https:' === options.protocol) ? https : http;
+  var request = obj.request(options, function (response) {
     self.validateResponse(response, callback);
   });
   request.end();
@@ -276,7 +285,8 @@ FileHelper.prototype.remoteValidate = function (imageUrl, callback) {
 FileHelper.prototype.remoteDownload = function (imageUrl, dest, callback) {
   var self = this;
   var file = fs.createWriteStream(dest);
-  var request = http.get(imageUrl, function(response) {
+  var obj = ('https:' === url.parse(imageUrl).protocol) ? https : http;
+  var request = obj.get(imageUrl, function(response) {
     self.validateResponse(response, function (err) {
       if (err) return callback(err);
       response.pipe(file);

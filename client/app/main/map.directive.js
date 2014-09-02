@@ -39,7 +39,7 @@ angular.module('app')
 
           function createMap() {
             map = new google.maps.Map(element[0], {
-              zoom: 10,
+              zoom: 15,
               center: new google.maps.LatLng($scope.location.lat, $scope.location.lng),
               mapTypeId: google.maps.MapTypeId.ROADMAP
             });
