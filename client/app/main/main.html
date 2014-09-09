@@ -88,7 +88,13 @@
       </div>
 
       <div class="info" bo-if="data.location">
-        <p><a ng-href="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" target="_blank" class="btn btn-default">FULL SCREEN MAP</a></p>
+        <p>
+          <a ng-href="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" target="_blank" class="btn btn-default">FULL SCREEN MAP</a>
+          <a href class="btn btn-default" ng-class="{'copied': clipCopied}" clip-copy clip-copy-text="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" clip-after-copy="clipAfterCopy()">
+            <span ng-hide="clipCopied">COPY LINK IN CLIPBOARD</span>
+            <span ng-show="clipCopied">IT HAS BEEN COPIED!</span>
+          </a>
+        </p>
         <div id="map" google-map="data.location.ddd"></div>
       </div>
       <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nazar</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>

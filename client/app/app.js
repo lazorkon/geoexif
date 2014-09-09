@@ -8,6 +8,7 @@ angular.module('app', [
   'ui.keypress',
   'pasvaz.bindonce',
   'angularFileUpload',
+  'ZeroClipboard',
   'angulartics', 
   'angulartics.google.analytics'
 ])

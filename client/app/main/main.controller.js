@@ -173,4 +173,12 @@ angular.module('app')
       return num ? Number(num).toFixed(6) : 0;
     };
 
+    $scope.clipCopied = false;
+    $scope.clipAfterCopy = function () {
+      $scope.clipCopied = true;
+      $timeout(function () {
+        $scope.clipCopied = false;
+      }, 2000);
+    };
+
   });
