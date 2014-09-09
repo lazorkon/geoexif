@@ -369,6 +369,8 @@ module.exports = function (grunt) {
           src: [
             'tmp',
             'package.json',
+            'start.sh',
+            'stop.sh',
             'server/**/*'
           ]
         }]

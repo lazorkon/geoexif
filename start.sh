@@ -16,5 +16,10 @@ if [ $(ps aux | grep $USER | grep node | grep -v grep | wc -l | tr -s "\n") -eq 
     LOG="./log/$DATE-forever.log"
     OUT_LOG="./log/$DATE-out.log"
     ERR_LOG="./log/$DATE-err.log"
-    cd $(dirname $0) && ./node_modules/.bin/forever --uid 'tagmazing' -m 5 --plain --no-colors --minUptime 1000 --spinSleepTime 10000 -p $(pwd) -l $LOG -o $OUT_LOG -e $ERR_LOG start server/app.js
+    if cd $SCRIPT_PATH ; then
+        if [[ ! -d log ]] ; then 
+            mkdir log
+        fi
+        ./node_modules/.bin/forever --uid 'tagmazing' -m 5 --plain --no-colors --minUptime 1000 --spinSleepTime 10000 -p $(pwd) -l $LOG -o $OUT_LOG -e $ERR_LOG start server/app.js
+    fi
 fi
