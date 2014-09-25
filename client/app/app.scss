@@ -36,18 +36,12 @@
 
 
 @import '../scss/bootstrap';
+@import '../scss/breakpoint';
 @import '../scss/tagmazing';
 
 /**
  * App-wide Styles
  */
-
-.browsehappy {
-    margin: 0.2em 0;
-    background: #ccc;
-    color: #000;
-    padding: 0.2em 0;
-}
 
 // Component styles are injected through grunt
 // injector

@@ -8,7 +8,7 @@ html, body, [ui-view], .page-wrap {
 .page-wrap {
   min-height: 100%;
   /* equal to footer height */
-  margin-bottom: -36px; 
+  padding-bottom: 36px;
   @include fix-3d();
 }
 .page-wrap:after {
@@ -20,21 +20,29 @@ footer, .page-wrap:after {
   position: relative;
   z-index: 30;
   text-align: center;
-  height: 36px; 
+  @include translate3d(0, -36px, 0);
 }
 footer p {
   margin: 0;
 }
 
 h1 {
-  font-family: "Letter Gothic Std", Helvetica, Arial, sans;
+  background:transparent url('/assets/images/logo.svg') left top no-repeat;
+  margin: 0 auto 17px;
+  overflow: hidden;
+  @include size(125px, 21px);
+  @include hide-text();
 }
 .v-center {
+  margin: 120px auto 0;
   padding: 50px 0 0;
-  @include vertical-align();
+  @include breakpoint($tall) {
+    margin-top: 0;
+    @include vertical-align();
+  }
 }
 .container > .info:first-child {
-  padding-top: 50px;
+  padding-top: 75px;
 }
 .page-wrap { 
   text-align: center;
@@ -42,7 +50,7 @@ h1 {
   @include transition(0.3s ease-in-out all);
   &.image-over { 
     border-color:$brand-success;
-    background: #fffafa;
+    background: #f2fbf5;
   }
   &.err-over { 
     border-color:$brand-danger; 
@@ -59,7 +67,7 @@ h1 {
 
 // Header
 header {
-  padding: 50px 0 0;
+  padding: 88px 0 0;
   position: relative;
   z-index: 20;
   .btn-back {
@@ -68,7 +76,7 @@ header {
     top: 20px;
   }
   &.slim {
-    padding-top: 20px;
+    padding-top: 32px;
   }
 }
 .btn-back, .btn-info {
@@ -78,16 +86,19 @@ header {
 // Drop zone
 .wrap-zone {
   width: 365px;
-  margin: 0 auto;
   .click-zone {
     padding: 25px 0;
     cursor: pointer;
+    letter-spacing: -0.06em;
   }
   [ng-file-select] {}
   .url-zone {
+    margin-top: 10px;
     input {
       text-align: center;
       font-size: $font-size-small;
+      font-family: 'Knowledge-Medium';
+      height: 45px;
     }
   }
 
