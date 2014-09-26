@@ -6,25 +6,34 @@ html, body, [ui-view], .page-wrap {
   height: 100%;
 }
 .page-wrap {
-  min-height: 100%;
   /* equal to footer height */
+  min-height: 100%;
   padding-bottom: 36px;
   @include fix-3d();
+  &.nonpinned {
+    height: auto;
+    min-height: none;
+    padding-bottom: 0;
+  }
 }
-.page-wrap:after {
-  content: "";
-  display: block;
-}
-footer, .page-wrap:after {
+footer {
   /* .push must be the same height as footer */
   position: relative;
   z-index: 30;
   text-align: center;
-  @include translate3d(0, -36px, 0);
+  line-height: 36px;
+  margin-top: 20px;
+  width: 100%;
+  height: 36px;
+  @include breakpoint($tall) {
+    margin-top: 0;
+    @include translate3d(0, -36px, 0);
+  }
+  p {
+    margin: 0;
+  }
 }
-footer p {
-  margin: 0;
-}
+
 
 h1 {
   background:transparent url('/assets/images/logo.svg') left top no-repeat;
@@ -43,6 +52,9 @@ h1 {
 }
 .container > .info:first-child {
   padding-top: 75px;
+}
+.container > .info:last-child {
+  margin-bottom: 36px;
 }
 .page-wrap { 
   text-align: center;
@@ -72,8 +84,14 @@ header {
   z-index: 20;
   .btn-back {
     position: absolute;
-    left: 0;
-    top: 20px;
+    left: 40px;
+    top: 14px;
+    font-size: 12px;
+    i:before {
+      font-size: 44px;
+      display: inline-block;
+      margin-top: 3px;
+    }
   }
   &.slim {
     padding-top: 32px;
@@ -84,6 +102,14 @@ header {
 }
 
 // Drop zone
+.container-first {
+  position: absolute;
+  top: 0;
+  left: 0;
+  @include square(100%);
+  @include backface-visibility(hidden);
+  @include transform-style(preserve-3d);
+}
 .wrap-zone {
   width: 365px;
   .click-zone {
@@ -100,6 +126,9 @@ header {
       font-family: 'Knowledge-Medium';
       height: 45px;
     }
+    button {
+      height: 45px;
+    }
   }
 
 }
@@ -107,14 +136,33 @@ header {
 // Info page
 .info {
   margin: $line-height-computed 0;
-  p {margin: 0;}
+  h5 {margin-bottom: 5px;}
+  p {
+    margin: 0;
+    line-height: 20px;
+  }
   img {
-    margin: $line-height-computed/2 0;
+    margin: $line-height-computed/2 0 0;
+  }
+  .btn {
+    line-height: 40px;
+    padding: 0;
+    color: $link-color;
+    margin-right: 4px;
+    margin-left: 4px;
+    @include size(200px, 40px);
+    &.copied {
+      color: #2ab75c;
+    }
+    &:active, &:focus, &:hover {
+      background:#fff;
+      @include box-shadow(none);
+    }
   }
 }
 
 #map {
-  margin: $line-height-computed/2 0;
-  height: 420px;
+  margin: 28px 0 0;
   width: 100%;
+  height: 635px;
 }
