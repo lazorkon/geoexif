@@ -15,6 +15,15 @@
         restrict: 'A',
         scope: {},
         link: function (scope, element, attr) {
+          if (null == $window.ZeroClipboard || ZeroClipboard.isFlashUnusable()) {
+            element.css('display', 'none');
+            return;
+          }
+
+          ZeroClipboard.on('error', function () {
+            element.css('display', 'none');
+          });
+
           var client = new $window.ZeroClipboard(element);
          
           client.on('ready', function (readyEvent) {

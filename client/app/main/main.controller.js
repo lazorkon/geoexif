@@ -95,7 +95,10 @@ angular.module('app')
           }
         }
       }
-      
+
+      if (0 === $files.length) {
+        return;
+      }
       var file = $files[0];
       $scope.upload = [];
       $scope.uploadResult = [];

@@ -3,6 +3,7 @@
 angular.module('app')
   .directive('googleMap', function ($document, $window) {
 
+    var apiLoaded;
     var apiUrl = '//maps.googleapis.com/maps/api/js?v=3&sensor=false&language=en'
       + '&callback=tmpOnMapLoad';
 
@@ -35,7 +36,7 @@ angular.module('app')
       restrict: 'A',
       template: '<div></div>',
       link: function ($scope, element, attr) {
-          var map, marker, apiLoaded;
+          var map, marker;
 
           function createMap() {
             map = new google.maps.Map(element[0], {

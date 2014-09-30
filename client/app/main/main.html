@@ -12,9 +12,9 @@
 
         <div class="click-zone" ng-file-select="onFileSelect($files, 'select')" onclick="this.value = null">
           <strong class="small">TO UPLOAD PICTURE</strong>
-          <div bindonce="dropSupported">
-            <strong bo-if="dropSupported"><a>DRAG OR CLICK HERE</a></strong>
-            <strong bo-if="!dropSupported"><a href="#">CLICK HERE</a></strong>
+          <div>
+            <strong ng-if="dropSupported"><a>DRAG OR CLICK HERE</a></strong>
+            <strong ng-if="!dropSupported"><a>CLICK HERE</a></strong>
           </div>
         </div>
 
