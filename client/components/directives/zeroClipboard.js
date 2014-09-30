@@ -42,10 +42,10 @@
                 });
               }
             });
+          });
 
-            scope.$on('$destroy', function () {
-              client.destroy();
-            });
+          scope.$on('$destroy', function () {
+            client.destroy();
           });
         }
       };
