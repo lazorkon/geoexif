@@ -1,107 +1,104 @@
-<div class="page-wrap" ng-file-drop="onFileSelect($files, 'drag')" ng-file-drop-available="dropSupported=true" ng-file-drag-over-class="getDragOverClass($event)">
-  <div class="stick">
-    <header ng-class="{slim: data}">
-      <button ng-show="data" type="button" class="btn btn-link btn-back" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
-      <h1>TAGMAZING</h1>
-      <p ng-hide="data">Discover where and how<br/>your picture has been make</p>
-    </header>
-    
-    <!-- Start Screen -->
-    <div class="container ani-sh" ng-hide="data || errors || selected">
-      <div class="wrap-zone v-center" ng-form="form">
+<div class="page-wrap" ng-file-drop="onFileSelect($files, 'drag')" ng-file-drop-available="dropSupported=true" ng-file-drag-over-class="getDragOverClass($event)" ng-class="{nonpinned: data}">
+  <!-- Start Screen -->
+  <header ng-class="{slim: data}">
+    <button ng-show="data" type="button" class="btn btn-link btn-back" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
+    <h1>TAGMAZING</h1>
+    <p ng-hide="data">Discover where and how<br/>your picture has been make</p>
+  </header>
 
-        <div class="click-zone" ng-file-select="onFileSelect($files, 'select')" onclick="this.value = null">
-          <strong class="small">TO UPLOAD PICTURE</strong>
-          <div>
-            <strong ng-if="dropSupported"><a>DRAG OR CLICK HERE</a></strong>
-            <strong ng-if="!dropSupported"><a>CLICK HERE</a></strong>
-          </div>
-        </div>
-
-        <div class="url-zone" ng-class="{'has-error': form.selectedUrl.$invalid}">
-          <div ng-class="{'input-group': selectedUrl}">
-            <input type="url" name="selectedUrl" class="form-control" placeholder="OR PASTE URL" ng-model="selectedUrl" ng-disabled="disableInput" ui-keypress="{13:'onUrlSelect($event)'}">
-            <span class="input-group-btn" ng-show="selectedUrl">
-              <button class="btn btn-info" type="button" ng-click="onUrlSelect($event)"><i class="icon-upload"></i></button>
-            </span>
-          </div>
-        </div>
-
-        <div class="drop-it-msg">
-          <strong class="text-success">JUST DROP IT HERE</strong>
+  <!-- Start Screen -->
+  <div class="container container-first ani-sh" ng-hide="data || errors || selected">
+    <div class="wrap-zone v-center" ng-form="form">
+      <div class="click-zone" ng-file-select="onFileSelect($files, 'select')" onclick="this.value = null">
+        <strong class="small">TO&nbsp;&nbsp;UPLOAD&nbsp;&nbsp;A&nbsp;&nbsp;PICTURE</strong>
+        <div bindonce="dropSupported">
+          <strong bo-if="dropSupported"><a>DRAG OR CLICK HERE</a></strong>
+          <strong bo-if="!dropSupported"><a href="#">CLICK HERE</a></strong>
         </div>
       </div>
-    </div>
 
-    <!-- Progress Bar -->
-    <div class="container ani-sh" ng-show="selected && !errors">
-      <div class="v-center">
-        <p ng-bind="selected.name"></p>
-        <div class="progress">
-          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%"></div>
+      <div class="url-zone" ng-class="{'has-error': form.selectedUrl.$invalid}">
+        <div ng-class="{'input-group': selectedUrl}">
+          <input type="url" name="selectedUrl" class="form-control" placeholder="OR PASTE URL" ng-model="selectedUrl" ng-disabled="disableInput" ui-keypress="{13:'onUrlSelect($event)'}">
+          <span class="input-group-btn" ng-show="selectedUrl">
+            <button class="btn btn-info" type="button" ng-click="onUrlSelect($event)"><i class="icon-upload"></i></button>
+          </span>
         </div>
       </div>
-    </div>
 
-    <!-- Error Screen -->
-    <div class="container ani-el" ng-if="errors">
-      <div class="v-center">
-        <p class="text-danger" role="alert"><strong>ARE YOU SURE, THAT YOUR FILE IS SUITABLE?</strong></p>
-        <p>jpg, tiff, arw, cr2, dng, nef, orf, raf, rw2</p>
-        <!-- png, bmp, raw, crw, pict, xmp, dng -->
-        <p>30Mb</p><br/><br/><br/>
-        <pre class="text-danger" ng-if="debug" ng-bind="errors"></pre>
-        <button type="button" class="btn btn-link btn-back" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
+      <div class="drop-it-msg">
+        <strong class="text-success">JUST DROP IT HERE</strong>
       </div>
     </div>
+  </div>
 
-    <!-- Report Block -->
-    <div class="container ani-el" ng-if="data && !selected" bindonce>
-      <!-- Picture info -->
-      <div class="info">
-        <h5>Picture</h5>
-        <p bo-text="data.file.filename"></p>
-        <p bo-if="data.resolution">
-          <span bo-text="data.resolution.x"></span> x <span bo-text="data.resolution.y"></span>
-          <span bo-text="data.file.extension | uppercase"></span>
-          <span bo-text="data.resolution.megapixels | prefix: '( ' | suffix: ' megapixels )'"></span>
-        </p>
-        <p bo-if="data.file.thumbUrl"><img bo-src="data.file.thumbUrl" bo-alt="data.file.filename"></p>
+  <!-- Progress Bar -->
+  <div class="container ani-sh" ng-show="selected && !errors">
+    <div class="v-center">
+      <p ng-bind="selected.name"></p>
+      <div class="progress">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%"></div>
       </div>
-
-      <div class="info" bo-if="data.camera">
-        <h5>Camera</h5>
-        <p ng-repeat="text in data.text.camera track by $index" bindonce bo-text="text"></p>
-      </div>
-
-      <div class="info" bo-if="data.date">
-        <h5>Date</h5>
-        <p><span bo-text="data.date.original | date:'medium'"></span></p>
-        <p><span bo-text="data.date.originalAgo"></span></p>
-      </div>
-
-      <div class="info" bo-if="data.location">
-        <h5>Location</h5>
-        <p ng-if="data.address" ng-bind="data.address"></p>
-        <p bo-if="data.location.dms"><span bo-text="formatDMSCoord(data.location.dms.lat)"></span>, <span bo-text="formatDMSCoord(data.location.dms.lng)"></span></p>
-        <p bo-if="data.location.ddd"><span bo-text="formatDDDCoord(data.location.ddd.lat)"></span>, <span bo-text="formatDDDCoord(data.location.ddd.lng)"></span></p>
-      </div>
-
-      <div class="info" bo-if="data.location">
-        <p>
-          <a ng-href="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" target="_blank" class="btn btn-default">FULL SCREEN MAP</a>
-          <a href class="btn btn-default" ng-class="{'copied': clipCopied}" clip-copy clip-copy-text="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" clip-after-copy="clipAfterCopy()">
-            <span ng-hide="clipCopied">COPY LINK IN CLIPBOARD</span>
-            <span ng-show="clipCopied">IT HAS BEEN COPIED!</span>
-          </a>
-        </p>
-        <div id="map" google-map="data.location.ddd"></div>
-      </div>
-      <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nazar</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>
     </div>
-  </div> <!-- Sticky footer  END-->
+  </div>
 
-</div>
-<footer ng-hide="data && !selected">
-    <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nazar</a>. Please leave your <button class="btn btn-link" id="uservoice-trigger">Feedback here</button></p>
+  <!-- Error Screen -->
+  <div class="container ani-el" ng-if="errors">
+    <div class="v-center">
+      <p class="text-danger" role="alert"><strong>ARE YOU SURE, THAT YOUR FILE IS SUITABLE?</strong></p>
+      <p>jpg, tiff, arw, cr2, dng, nef, orf, raf, rw2</p>
+      <!-- png, bmp, raw, crw, pict, xmp, dng -->
+      <p>30Mb</p><br/><br/><br/>
+      <pre class="text-danger" ng-if="debug" ng-bind="errors"></pre>
+      <button type="button" class="btn btn-link btn-back" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
+    </div>
+  </div>
+
+  <!-- Report Block -->
+  <div class="container ani-el" ng-if="data && !selected" bindonce>
+    <!-- Picture info -->
+    <div class="info">
+      <h5>Picture</h5>
+      <p bo-text="data.file.filename"></p>
+      <p bo-if="data.resolution">
+        <span bo-text="data.resolution.x"></span> x <span bo-text="data.resolution.y"></span>
+        <span bo-text="data.file.extension | uppercase"></span>
+        <span bo-text="data.resolution.megapixels | prefix: '( ' | suffix: ' megapixels )'"></span>
+      </p>
+      <p bo-if="data.file.thumbUrl"><img bo-src="data.file.thumbUrl" bo-alt="data.file.filename"></p>
+    </div>
+
+    <div class="info" bo-if="data.camera">
+      <h5>Camera</h5>
+      <p ng-repeat="text in data.text.camera track by $index" bindonce bo-text="text"></p>
+    </div>
+
+    <div class="info" bo-if="data.date">
+      <h5>Date</h5>
+      <p><span bo-text="data.date.original | date:'medium'"></span></p>
+      <p><span bo-text="data.date.originalAgo"></span></p>
+    </div>
+
+    <div class="info" bo-if="data.location">
+      <h5>Location</h5>
+      <p ng-if="data.address" ng-bind="data.address"></p>
+      <p bo-if="data.location.dms"><span bo-text="formatDMSCoord(data.location.dms.lat)"></span>, <span bo-text="formatDMSCoord(data.location.dms.lng)"></span></p>
+      <p bo-if="data.location.ddd"><span bo-text="formatDDDCoord(data.location.ddd.lat)"></span>, <span bo-text="formatDDDCoord(data.location.ddd.lng)"></span></p>
+    </div>
+
+    <div class="info" bo-if="data.location">
+      <p>
+        <a ng-href="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" target="_blank" class="btn btn-default">FULL SCREEN MAP</a>
+        <a href class="btn btn-default" ng-class="{'copied': clipCopied}" clip-copy clip-copy-text="https://www.google.com/maps/preview?z=10&amp;q={{data.location.ddd.lat}}+{{data.location.ddd.lng}}" clip-after-copy="clipAfterCopy()">
+          <span ng-hide="clipCopied">COPY LINK IN CLIPBOARD</span>
+          <span ng-show="clipCopied">IT HAS BEEN COPIED!</span>
+        </a>
+      </p>
+      <div id="map" google-map="data.location.ddd"></div>
+    </div>
+  </div>
+
+</div><!-- Sticky footer  END-->
+<footer>
+    <p>Developed by <a href="#">Vitya</a>, <a href="#">Vadym</a>, <a href="#">Nazar</a>. Please leave your <a href="#" id="uservoice-trigger">Feedback here</a></p>
 </footer>
