@@ -1,4 +1,4 @@
-<div class="page-wrap" ng-file-drop="onFileSelect($files, 'drag')" ng-file-drop-available="dropSupported=true" ng-file-drag-over-class="getDragOverClass($event)" ng-class="{nonpinned: data}">
+<div class="page-wrap" ng-file-drop="onFileSelect($files, 'drag')" ng-file-drop-available="dropSupported=true" ng-file-drag-over-class="getDragOverClass($event)" ng-file-drag-over-delay="200" ng-class="{nonpinned: data}">
   <!-- Start Screen -->
   <header ng-class="{slim: data}">
     <button ng-show="data" type="button" class="btn btn-link btn-back" ng-click="reset()"><i class="icon-back"></i> UPLOAD AGAIN</button>
