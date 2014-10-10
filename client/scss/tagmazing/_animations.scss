@@ -28,6 +28,11 @@
 }
 .container-abs {
 	position: absolute;
+	top: 0;
+	left: 0;
+	@include square(100%);
+	@include backface-visibility(hidden);
+	@include transform-style(preserve-3d);
 }
 .container-rel {
 	position: relative;
