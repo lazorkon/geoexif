@@ -18,15 +18,19 @@
 	@include transform-style(preserve-3d);
   display:block!important;
 }
-
 .ani-el.ng-enter, 
 .ani-el.ng-leave {
-	position: absolute;
 	top: 0;
 	left: 0;
 	@include square(100%);
 	@include backface-visibility(hidden);
 	@include transform-style(preserve-3d);
+}
+.container-abs {
+	position: absolute;
+}
+.container-rel {
+	position: relative;
 }
 
 .ani-sh.ng-hide-remove, 

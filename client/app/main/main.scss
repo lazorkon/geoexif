@@ -27,7 +27,6 @@ footer {
   height: 36px;
   @include breakpoint($tall) {
     margin-top: 0;
-    @include translate3d(0, -36px, 0);
   }
   p {
     margin: 0;
@@ -36,6 +35,12 @@ footer {
     @include breakpoint($narrow) {
       font-size: 16px;
     }
+  }
+}
+footer, 
+.uv-popover {
+ @include breakpoint($tall) {
+    @include translate3d(0, -36px, 0);
   }
 }
 .slice-text {

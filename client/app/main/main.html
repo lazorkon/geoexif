@@ -32,16 +32,6 @@
     </div>
   </div>
 
-  <!-- Progress Bar -->
-  <div class="container ani-sh" ng-show="selected && !errors">
-    <div class="v-center">
-      <p ng-bind="selected.name"></p>
-      <div class="progress">
-        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%"></div>
-      </div>
-    </div>
-  </div>
-
   <!-- Error Screen -->
   <div class="container ani-el" ng-if="errors">
     <div class="v-center">
@@ -54,8 +44,18 @@
     </div>
   </div>
 
+  <!-- Progress Bar -->
+  <div class="container container-abs ani-sh" ng-show="selected && !errors">
+    <div class="v-center">
+      <p ng-bind="selected.name"></p>
+      <div class="progress">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Report Block -->
-  <div class="container ani-el" ng-if="data && !selected" bindonce>
+  <div class="container container-rel ani-el" ng-if="data && !selected" bindonce>
     <!-- Picture info -->
     <div class="info">
       <h5>Picture</h5>
