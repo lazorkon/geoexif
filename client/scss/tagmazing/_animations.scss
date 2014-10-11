@@ -48,6 +48,11 @@
 	@include animation(scaleDownCenter 0.4s ease-in both);
 }
 
+.step-first.ani-sh.ng-hide-remove,
+.step-last.ani-el.ng-leave {
+	@include animation(none);
+}
+
 @-webkit-keyframes scaleDownCenter {
 	from { }
 	to { 

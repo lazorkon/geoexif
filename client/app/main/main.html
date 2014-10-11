@@ -7,7 +7,7 @@
   </header>
 
   <!-- Start Screen -->
-  <div class="container container-first ani-sh" ng-hide="data || errors || selected">
+  <div class="container container-first ani-sh step-first" ng-hide="data || errors || selected">
     <div class="wrap-zone v-center" ng-form="form">
       <div class="click-zone" ng-file-select="onFileSelect($files, 'select')" onclick="this.value = null">
         <strong class="small">TO&nbsp;&nbsp;UPLOAD&nbsp;&nbsp;A&nbsp;&nbsp;PICTURE</strong>
@@ -55,7 +55,7 @@
   </div>
 
   <!-- Report Block -->
-  <div class="container container-rel ani-el" ng-if="data && !selected" bindonce>
+  <div class="container container-rel ani-el step-last" ng-if="data && !selected" bindonce>
     <!-- Picture info -->
     <div class="info">
       <h5>Picture</h5>
